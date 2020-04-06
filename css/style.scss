@@ -1,0 +1,60 @@
+$cwhite: #fff;
+$cBlack: #333;
+$cBlue: skyblue;
+
+* {box-sizing: border-box;}
+
+
+
+a {
+  text-decoration: none;
+}
+
+body {
+  font-size: 20px;
+  line-height: 1.5;
+  font-family: 'Noto Sans JP','Open Sans', sans-serif;
+  font-weight: 400;
+  color:$cBlack;
+  background-color: $cwhite;
+}
+
+h1,
+h2,
+h3 {
+  margin-top: 0;
+  line-height: 1.5;
+  letter-spacing: 0.2em;
+  text-align: center;
+}
+
+
+header {
+    height: 70px;
+}
+
+// 極小デバイス（縦向きモバイル, 576px 未満）
+@media (max-width: 575.98px) {
+ h1,
+ h2,
+ p,
+ .fontsize_responsive {
+   font-size: 0.9em;
+ }
+  body {
+    font-size: 16px;
+  }
+
+ h2 {
+   font-weight: bold;
+ }
+}
+
+@media (min-width: 1023px) {
+  // .container {
+  //   max-width: 1000px;
+  // }
+  .pc-only {
+    max-width:700px;
+  }
+}

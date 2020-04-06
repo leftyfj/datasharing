@@ -1,0 +1,90 @@
+-- ---
+-- Globals
+-- ---
+
+-- SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+-- SET FOREIGN_KEY_CHECKS=0;
+
+-- ---
+-- Table 'user'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `user`;
+		
+CREATE TABLE `user` (
+  `id` INTEGER(10) NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(30) NULL DEFAULT NULL,
+  `user_email` VARCHAR(200) NULL DEFAULT NULL,
+  `user_password` VARCHAR(60) NULL DEFAULT NULL,
+  `admin_check` INTEGER(2) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` TIMESTAMP NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Table 'auto_login'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `auto_login`;
+		
+CREATE TABLE `auto_login` (
+  `id` INTEGER(10) NOT NULL AUTO_INCREMENT DEFAULT NULL,
+  `user_id` INTEGER NOT NULL,
+  `c_key` VARCHAR(40) NOT NULL,
+  `expire` TIMESTAMP NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Table 'data'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `data`;
+		
+CREATE TABLE `data` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `company` VARCHAR(100) NULL DEFAULT NULL,
+  `producer` VARCHAR(100) NULL DEFAULT NULL,
+  `director` VARCHAR(100) NULL DEFAULT NULL,
+  `starring` VARCHAR(200) NULL DEFAULT NULL,
+  `prize_check` INTEGER(2) NULL DEFAULT NULL,
+  `times` INTEGER(3) NULL DEFAULT NULL,
+  `year` INTEGER(4) NULL DEFAULT NULL,
+  `record` VARCHAR(300) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_by` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Foreign Keys 
+-- ---
+
+
+-- ---
+-- Table Properties
+-- ---
+
+-- ALTER TABLE `user` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `auto_login` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `data` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- ---
+-- Test Data
+-- ---
+
+-- INSERT INTO `user` (`id`,`user_name`,`user_email`,`user_password`,`admin_check`,`created_at`,`updated_at`) VALUES
+-- ('','','','','','','');
+-- INSERT INTO `auto_login` (`id`,`user_id`,`c_key`,`expire`,`created_at`,`updated_at`) VALUES
+-- ('','','','','','');
+-- INSERT INTO `data` (`id`,`title`,`company`,`producer`,`director`,`starring`,`prize_check`,`times`,`year`,`record`,`created_at`,`created_by`,`updated_at`,`updated_by`) VALUES
+-- ('','','','','','','','','','','','','','');
