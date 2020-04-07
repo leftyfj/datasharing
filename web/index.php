@@ -30,7 +30,7 @@ $offset = PAGE_COUNT * ($page -1);
 
 //getされたキーワードを受け取る
 $search_query = $_GET['q'];
-$sortBy = 'name';
+//$sortBy = 'name';
 //$orderBy = ASC;
 
 if($_GET['o'] !='') {
@@ -42,7 +42,8 @@ if($_GET['o'] !='') {
 if($_GET['s'] !='') {
   $sortBy = $_GET['s']; //ソートのリクエストがあったときのget
 } else {
-  $sortBy = 'id';
+  //$sortBy = 'id';
+  $sortBy = 'rank';
 }
 
   //データベースに接続
@@ -50,13 +51,24 @@ if($_GET['s'] !='') {
 
   //キーワードを部分一致に変換、キーワードがなければ全件抽出
   //キーワードを含むデータを検索するsql文
-
   //ホワイトリスト照合
   // ホワイトリストの準備（カラム）
-  $sort_whitelist = array('id' => 'id', 'rank' => '順位', 'title_ja' =>'邦題', 'title_en' => '原題', 'year' => '公開年', 'director' => '監督', 'producer' => '制作者', 'starring' => '出演', 'prize' => '受賞');
-  //$sort_whitelist = array('rank' => '順位', 'title_ja' =>'邦題', 'title_en' => '原題', 'year' => '公開年', 'director' => '監督', 'producer' => '制作者', 'starring' => '出演', 'prize' => '受賞');
+ // $sort_whitelist = array('id' => 'id', 'rank' => '順位', 'title_ja' =>'邦題', 'title_en' => '原題', 'year' => '公開年', 'director' => '監督', 'producer' => '制作者', 'starring' => '出演', 'prize' => '受賞');
+  //$sort_whitelist = array('rank' => 'rank', 'title_ja' =>'title_ja', 'title_en' => 'title_en', 'year' => 'year', 'director' => 'director', 'producer' => 'producer', 'starring' => 'starring', 'prize' => 'prize');
 
-  $sort_safe = isset($sort_whitelist[$sortBy]) ? $sort_whitelist[$sortBy] : $sort_whitelist['id'];
+   $sort_whitelist = [
+     'rank'     => ['rank','順位'],
+     'title_ja' =>['title_ja', '邦題'],
+     'title_en' => ['title_en','原題'],
+     'year'     => ['year','公開年'],
+     'director' => ['director','監督'],
+     'producer' => ['producer','制作者'],
+     'starring' => ['starring','出演'],
+     'prize'    => ['prize','受賞']
+   ];
+
+  //$sort_safe = isset($sort_whitelist[$sortBy]) ? $sort_whitelist[$sortBy] : $sort_whitelist['id'];
+  $sort_safe = isset($sort_whitelist[$sortBy][0]) ? $sort_whitelist[$sortBy][0] : $sort_whitelist['rank'][0];
 
   $order_whitelist = array('asc' => 'asc', 'desc' => 'desc');
 
@@ -184,18 +196,13 @@ if($_GET['s'] !='') {
             <thead class="thead-light">
               <tr>
                 <?php foreach($sort_whitelist as $column): ?>
-                  <?php if($column == $sortBy):?>
+                  <?php if($column[0] == $sortBy):?>
                     <th>
-                      <a href="?s=<?php echo h($column);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>">
-                      <?php echo h($column);?>
-                        <span><i class="<?php echo $arrow_icon;?>"></i></span>
-                      </a>
+                      <a href="?s=<?php echo h($column[0]);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
                     </th>
                   <?php else:?>
                     <th>
-                      <a href="?s=<?php echo h($column);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column);?>
-                        <span><i class="<?php echo $arrow_icon;?>"></i></span>
-                      </a>
+                      <a href="?s=<?php echo h($column[0]);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
                     </th>
                   <?php endif;?>
                 <?php endforeach;?>
@@ -206,7 +213,7 @@ if($_GET['s'] !='') {
             <tbody>
                 <?php foreach ($data as $datum) :?>
                   <tr>
-                    <td><?php echo $datum['id']; ?></td>
+                    <!-- <td><?php //echo $datum['id']; ?></td> -->
                     <td><?php echo $datum['rank']; ?></td>
                     <td><?php echo $datum['title_ja']; ?></td>
                     <td><?php echo $datum['title_en']; ?></td>
