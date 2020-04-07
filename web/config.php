@@ -28,7 +28,7 @@ define('SITE_URL', 'http://localhost/dev/datasharing/web/');
 //サイトtitle
     define('SITE_TITEL', 'DataSharing_OSCAR');
 //ペーネーション
-    define('PAGE_COUNT', 10);
+    define('PAGE_COUNT', 20);
 
 
 ?>

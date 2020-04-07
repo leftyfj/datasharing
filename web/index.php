@@ -53,28 +53,59 @@ if($_GET['s'] !='') {
 
   //ホワイトリスト照合
   // ホワイトリストの準備（カラム）
-  $sort_whitelist = array('id' => 'id', 'name' => '氏名', 'address' => '住所');
+  $sort_whitelist = array('id' => 'id', 'rank' => '順位', 'title_ja' =>'邦題', 'title_en' => '原題', 'year' => '公開年', 'director' => '監督', 'producer' => '制作者', 'starring' => '出演', 'prize' => '受賞');
+  //$sort_whitelist = array('rank' => '順位', 'title_ja' =>'邦題', 'title_en' => '原題', 'year' => '公開年', 'director' => '監督', 'producer' => '制作者', 'starring' => '出演', 'prize' => '受賞');
+
   $sort_safe = isset($sort_whitelist[$sortBy]) ? $sort_whitelist[$sortBy] : $sort_whitelist['id'];
 
   $order_whitelist = array('asc' => 'asc', 'desc' => 'desc');
+
   $order_safe = isset($order_whitelist[$orderBy]) ? $order_whitelist[$orderBy] : $order_whitelist['asc'];
-  $sql = "SELECT * FROM `item` WHERE `name` LIKE :name OR `address` LIKE :address ORDER BY  $sort_safe $order_safe LIMIT  :offset, :count";
- 
+
+  $sql = "SELECT * FROM `data` 
+  WHERE `title_ja` LIKE :title_ja 
+  OR `title_en` LIKE :title_en 
+  OR `year` LIKE :year 
+  OR `director` LIKE :director 
+  OR `producer` LIKE :producer 
+  OR `starring` LIKE :starring 
+  OR `prize` LIKE :prize 
+  ORDER BY  $sort_safe $order_safe LIMIT  :offset, :count";
+
   //該当データを取得する
   $stmt = $pdo->prepare($sql);
-  $stmt ->bindValue(':name', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmt ->bindValue(':address', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':title_ja', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':title_en', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':year', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':director', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':producer', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':starring', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':prize', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
   $stmt ->bindValue(':count', PAGE_COUNT, PDO::PARAM_INT);
   $stmt-> execute();
   //取得したデータを配列に収める
   $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
+  //4/7 ここから
   //抽出されたデータは何件あるか調べる
-  $sqlForCounts = "SELECT count(*) FROM `item` WHERE `name` LIKE :name OR `address` LIKE :address";
+  $sqlForCounts = "SELECT count(*) FROM `data` 
+  WHERE `title_ja` LIKE :title_ja 
+  OR `title_en` LIKE :title_en 
+  OR `year` LIKE :year 
+  OR `director` LIKE :director 
+  OR `producer` LIKE :producer 
+  OR `starring` LIKE :starring 
+  OR `prize` LIKE :prize"; 
+
   $stmtForCounts = $pdo->prepare($sqlForCounts);
-  $stmtForCounts ->bindValue(':address', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmtForCounts ->bindValue(':name', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':title_ja', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':title_en', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':year', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':director', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':producer', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':starring', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':prize', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmtForCounts-> execute();
   $total = $stmtForCounts->fetchColumn();
   //該当データのページ数
@@ -102,7 +133,7 @@ if($_GET['s'] !='') {
 <body  style="padding-top:70px;">
     <header>
     <nav class="nav navbar fixed-top navbar-expand-lg navbar-dark bg-dark text-white ">
-		<div class="container ">
+		<div class="container">
       <h1><a href="index.php" class="navbar-brand">
         データ共有システム
       </a></h1>
@@ -123,7 +154,7 @@ if($_GET['s'] !='') {
   </nav>
   </header>
   <main>
-    <div class="container bg-light p-4">
+    <div class="containera bg-light p-4">
       <div id="jq"></div>
       <h2><caption><i class="fas fa-sign-in-alt" style="color:orange;"></i>&nbsp;データ一覧</caption></h2>
           <div class="row justify-content-sm-between mb-3">
@@ -154,9 +185,18 @@ if($_GET['s'] !='') {
               <tr>
                 <?php foreach($sort_whitelist as $column): ?>
                   <?php if($column == $sortBy):?>
-                    <th><a href="?s=<?php echo h($column);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>"><?php echo h($column);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a></th>
+                    <th>
+                      <a href="?s=<?php echo h($column);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>">
+                      <?php echo h($column);?>
+                        <span><i class="<?php echo $arrow_icon;?>"></i></span>
+                      </a>
+                    </th>
                   <?php else:?>
-                    <th><a href="?s=<?php echo h($column);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a></th>
+                    <th>
+                      <a href="?s=<?php echo h($column);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column);?>
+                        <span><i class="<?php echo $arrow_icon;?>"></i></span>
+                      </a>
+                    </th>
                   <?php endif;?>
                 <?php endforeach;?>
 
@@ -164,13 +204,23 @@ if($_GET['s'] !='') {
               </tr>
             </thead>
             <tbody>
-
                 <?php foreach ($data as $datum) :?>
-                  <tr><td style="width:15%"><?php echo $datum['id']; ?></td><td style="width:25%"><?php echo $datum['name']; ?></td><td style="width:45%"><?php echo $datum['address']; ?></td><td style="width:15%" class="text-center"><input type="radio" name="member" value="<?php echo $datum['id'];?>"></td></tr>
+                  <tr>
+                    <td><?php echo $datum['id']; ?></td>
+                    <td><?php echo $datum['rank']; ?></td>
+                    <td><?php echo $datum['title_ja']; ?></td>
+                    <td><?php echo $datum['title_en']; ?></td>
+                    <td><?php echo $datum['year']; ?></td>
+                    <td><?php echo $datum['derector']; ?></td>
+                    <td><?php echo $datum['producer']; ?></td>
+                    <td><?php echo $datum['starring']; ?></td>
+                    <td><?php echo $datum['prize']; ?></td>
+                    <td><input type="radio" name="member" value="<?php echo $datum['id'];?>"></td>
+                  </tr>
                 <?php endforeach; ?>
-
+             </tbody>
           </form>
-            </tbody>
+
           </table>
           <div class="row">
             <div class="col-sm-6 ">
