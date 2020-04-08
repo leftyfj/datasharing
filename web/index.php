@@ -192,37 +192,39 @@ if($_GET['s'] !='') {
             }
           ?>
           <table class="table table-sm table-hover">
-          <form action="item_edit.php" method="post">
+          <form action="data_edit.php" method="post">
             <thead class="thead-light">
               <tr>
                 <?php foreach($sort_whitelist as $column): ?>
                   <?php if($column[0] == $sortBy):?>
                     <th>
-                      <a href="?s=<?php echo h($column[0]);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
+                      <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
                     </th>
                   <?php else:?>
                     <th>
-                      <a href="?s=<?php echo h($column[0]);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
+                      <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
                     </th>
                   <?php endif;?>
                 <?php endforeach;?>
 
-                <th class="text-center"><input type="submit" id="amend" value="修正"></th>
+                <th style="font-size:16px;" class="text-center"><input type="submit" id="amend" value="修正"></th>
+                <th style="font-size:16px;" class="text-center"><input type="submit" id="delete" value="削除"></th>
               </tr>
             </thead>
             <tbody>
                 <?php foreach ($data as $datum) :?>
                   <tr>
                     <!-- <td><?php //echo $datum['id']; ?></td> -->
-                    <td><?php echo $datum['rank']; ?></td>
-                    <td><?php echo $datum['title_ja']; ?></td>
-                    <td><?php echo $datum['title_en']; ?></td>
-                    <td><?php echo $datum['year']; ?></td>
-                    <td><?php echo $datum['derector']; ?></td>
-                    <td><?php echo $datum['producer']; ?></td>
-                    <td><?php echo $datum['starring']; ?></td>
-                    <td><?php echo $datum['prize']; ?></td>
-                    <td><input type="radio" name="member" value="<?php echo $datum['id'];?>"></td>
+                    <td style="width:4%"><?php echo $datum['rank']; ?></td>
+                    <td style="width:18%"><?php echo $datum['title_ja']; ?></td>
+                    <td style="width:19%"><?php echo $datum['title_en']; ?></td>
+                    <td style="width:7%"><?php echo $datum['year']; ?></td>
+                    <td style="width:10%"><?php echo $datum['derector']; ?></td>
+                    <td style="width:10%"><?php echo $datum['producer']; ?></td>
+                    <td style="width:10%"><?php echo $datum['starring']; ?></td>
+                    <td style="width:10%"><?php echo $datum['prize']; ?></td>
+                    <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php echo $datum['id'];?>"></td>
+                    <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php echo $datum['id'];?>"></td>
                   </tr>
                 <?php endforeach; ?>
              </tbody>
