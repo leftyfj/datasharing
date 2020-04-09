@@ -29,6 +29,15 @@ header {
   height: 70px;
 }
 
+.required {
+  background-color: #BB1850;
+  color: #fff;
+  font-size: 90%;
+  padding: 2px;
+  margin-left: 10px;
+  border-radius: 10%;
+}
+
 @media (max-width: 575.98px) {
   h1,
   h2,

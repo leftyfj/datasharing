@@ -26,11 +26,21 @@ h3 {
   line-height: 1.5;
   letter-spacing: 0.2em;
   text-align: center;
+  
 }
 
 
 header {
     height: 70px;
+}
+
+.required {
+	background-color: #BB1850;
+	color: #fff;
+	font-size: 90%;
+	padding: 2px;
+  margin-left: 10px;
+  border-radius: 10%;
 }
 
 // 極小デバイス（縦向きモバイル, 576px 未満）

@@ -17,22 +17,42 @@ $former_url = $_SERVER['HTTP_REFERER'];
 
 if(strpos($former_url, SITE_URL.'index.php') == 0) {
 
-  $id = $_POST['movie'];
+  $id_to_edit = $_GET['id'];
   //データベースに接続する
   $pdo = connectDb();
   //sql文 $idのデータをSELECTする
   $sql = "SELECT * FROM `data` WHERE `id`=:id";
   //データベースからデータを取得する
   $stmt = $pdo->prepare($sql);
-  $stmt->bindValue(':id',$id,PDO::PARAM_INT);
+  $stmt->bindValue(':id',$id_to_edit,PDO::PARAM_INT);
   $movie = $stmt->execute();
   $movie = $stmt->fetch();
 
   //データベースへの接続を解除する
   unset($pdo);
   
-  $_SESSION['USER'] = $user;
+  if(!empty($_POST)) {
+
+    $_SESSION['DATA'] =$_POST;
+    $_SESSION['DATA']['amend_key'] =$id_to_edit;
+    $_SESSION['USER'] = $user;
+    header('location: data_check.php');
+    exit;
+  }
+  
 }
+
+if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
+  $movie['rank'] = $_SESSION['DATA']['rank'];
+  $movie['title_ja'] = $_SESSION['DATA']['title_ja'];
+  $movie['title_en' ]= $_SESSION['DATA']['title_en'];
+  $movie['year' ]= $_SESSION['DATA']['year'];
+  $movie['director'] =$_SESSION['DATA']['director'];
+  $movie['producer'] =$_SESSION['DATA']['producer'];
+  $movie['starring'] =$_SESSION['DATA']['starring'] ;
+  $movie['prize'] = $_SESSION['DATA']['prize'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -76,14 +96,14 @@ if(strpos($former_url, SITE_URL.'index.php') == 0) {
   <main>
     <div class="container pc-only bg-light p-4">
       <h2><caption><i class="fas fa-edit" style="color:orange;"></i>&nbsp;データ登録・編集</caption></h2>
-      <form action="data_check.php" method="post">
+      <form action="" method="post">
         <div class="form-group mb-4">
           <label for="rank">順位</label>
           <input type="text" name="rank" value="<?php echo $movie['rank'];?>"class="form-control form-control">
           <input type="hidden" name="amend" value="<?php echo $movie['id'];?>">
         </div>
         <div class="form-group mb-4">
-          <label for="title_ja">作品名</label>
+          <label for="title_ja">作品名<span class="required">必須</span></label>
           <input type="text" name="title_ja" value="<?php echo $movie['title_ja'];?>"class="form-control form-control">
         </div>
         <div class="form-group mb-4">
@@ -114,6 +134,7 @@ if(strpos($former_url, SITE_URL.'index.php') == 0) {
           <button type="submit" class="btn btn-info text-white m-3">内容確認</button>
         </div>
       </form>
+
     </div> <!--end container-->
   </main>
   <footer>

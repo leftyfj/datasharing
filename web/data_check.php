@@ -6,21 +6,80 @@ ini_set('display_errors',0);
 error_reporting(0);
 session_start();
 
+if (!isset($_SESSION['USER'])) {
+    header('Location: '.SITE_URL.'login.php');
+    exit;
+}
+
 $user = $_SESSION['USER'];
-
-$amend = h($_POST['amend']);
-
+$error_message ='';
 setToken();
 
-$title = $_POST['title'] == "" ? '未入力': $_POST['title'];
-$company = $_POST['company'] == "" ? '未入力': $_POST['company'];
-$producer = $_POST['producer'] == "" ? '未入力': $_POST['producer'];
-$director = $_POST['director'] == "" ? '未入力': $_POST['director'];
-$starring = $_POST['starring'] == "" ? '未入力': $_POST['starring'];
-$prize_check = $_POST['prize_check'] ==1 ? '受賞' : 'ノミネート';
-$times = $_POST['times'] == "" ? '未入力': $_POST['times'];
-$year = $_POST['year'] == "" ? '未入力': $_POST['year'];
-$record = $_POST['record'] == "" ? '未入力': $_POST['record'];
+if(empty($_SESSION['DATA']['title_ja'])) {
+  $error_message ="邦題の入力は必須です";
+} else {
+  $title_ja = $_SESSION['DATA']['title_ja'];
+}
+
+$rank = $_SESSION['DATA']['rank'] == "" ? '':$_SESSION['DATA']['rank'];
+
+$title_en = $_SESSION['DATA']['title_en'] == "" ? '': $_SESSION['DATA']['title_en'];
+$year = $_SESSION['DATA']['year'] == "" ? '':$_SESSION['DATA']['year'];
+$director = $_SESSION['DATA']['director'] == "" ? '': $_SESSION['DATA']['director'];
+$producer = $_SESSION['DATA']['producer'] == "" ? '': $_SESSION['DATA']['producer'];
+$starring = $_SESSION['DATA']['starring'] == "" ? '': $_SESSION['DATA']['starring'] ;
+$prize = $_SESSION['DATA']['prize'] == "" ? '': $_SESSION['DATA']['prize'];
+
+if(!empty($_POST)) {
+  //新規登録か修正か判断する
+  $pdo = connectDb();
+
+  if(is_null($_SESSION['DATA']['amend_key'])) {
+
+    //新規登録
+    $sql = "INSERT INTO data (rank, title_ja, title_en, year, director, producer, starring, prize, created_at, created_by, updated_at, updated_by) VALUES(:rank, :title_ja, :title_en, :year, :director, :producer, :starring, :prize, now(), :created_by, now(), :updated_by)";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':rank',$rank);
+    $stmt->bindValue(':title_ja',$title_ja);
+    $stmt->bindValue(':title_en',$title_en);
+    $stmt->bindValue(':year',$year);
+    $stmt->bindValue(':director',$director);
+    $stmt->bindValue(':producer',$producer);
+    $stmt->bindValue(':starring',$starring);
+    $stmt->bindValue(':prize',$prize);
+    $stmt->bindValue(':created_by',$user['id']);
+    $stmt->bindValue(':updated_by',$user['id']);
+  
+    $flag = $stmt->execute();
+  } else {
+    //修正
+  
+    $sql = "UPDATE data SET rank = :rank , title_ja = :title_ja, title_en = :title_en, year = :year, director =:director, producer =:producer, starring =:starring,prize =:prize, updated_at = now(), updated_by =:updated_by WHERE id =:id";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':rank',$rank);
+    $stmt->bindValue(':title_ja',$title_ja);
+    $stmt->bindValue(':title_en',$title_en);
+    $stmt->bindValue(':year',$year);
+    $stmt->bindValue(':director',$director);
+    $stmt->bindValue(':producer',$producer);
+    $stmt->bindValue(':starring',$starring);
+    $stmt->bindValue(':updated_by',$user['id']);
+    $stmt->bindValue(':prize',$prize);
+    $stmt->bindValue(':id',$_SESSION['DATA']['amend']);
+
+    $flag = $stmt->execute();
+
+  }
+
+    if($flag){
+      echo'登録しました';
+    }
+  //DBを切断
+  unset($pdo);
+
+}
 
 $_SESSION['USER'] =$user;
 ?>
@@ -63,32 +122,43 @@ $_SESSION['USER'] =$user;
 
   </nav>
   </header>
+
   <main>
     <div class="container pc-only bg-light p-4">
       <h2><caption><i class="fas fa-edit" style="color:orange;"></i>&nbsp;内容確認</caption></h2>
+      <form action="" method="post">
+        <input type="hidden" name="action" value="submit" />
         <dl class="row">
-          <dd class="col-md-3 font-weight-bold">作品名</dd>
-          <dd class="col-md-9 "><?php echo $title;?></dd>
-          <dd class="col-md-3 font-weight-bold">制作会社</dd>
-          <dd class="col-md-9"><?php echo $company;?></dd>
-          <dd class="col-md-3 font-weight-bold">プロデューサー</dd>
-          <dd class="col-md-9"><?php echo $producer;?></dd>
+         <dd class="col-md-3 font-weight-bold">順位</dd>
+          <dd class="col-md-9 "><?php echo $rank;?></dd>
+          <dd class="col-md-3 font-weight-bold">邦題</dd>
+          <?php if($error_message):?>
+            <dd class="col-md-9 text-danger font-weight-bold"><?php echo $error_message;?></dd>
+          <?php else:?>
+            <dd class="col-md-9 "><?php echo $title_ja;?></dd>
+          <?php endif;?>
+          <dd class="col-md-3 font-weight-bold">原題</dd>
+          <dd class="col-md-9 "><?php echo $title_en;?></dd>
+          <dd class="col-md-3 font-weight-bold">公開年</dd>
+          <dd class="col-md-9"><?php echo $year;?></dd>
           <dd class="col-md-3 font-weight-bold">監督</dd>
           <dd class="col-md-9"><?php echo $director;?></dd>
-          <dd class="col-md-3 font-weight-bold">主演</dd>
+          <dd class="col-md-3 font-weight-bold">プロデューサー</dd>
+          <dd class="col-md-9"><?php echo $producer;?></dd>
+          <dd class="col-md-3 font-weight-bold">出演</dd>
           <dd class="col-md-9"><?php echo $starring;?></dd>
           <dd class="col-md-3 font-weight-bold">受賞</dd>
-          <dd class="col-md-9"><?php echo $prize_check;?></dd>
-          <dd class="col-md-3 font-weight-bold">回</dd>
-          <dd class="col-md-9"><?php echo $times;?></dd>
-          <dd class="col-md-3 font-weight-bold">年</dd>
-          <dd class="col-md-9"><?php echo $year;?></dd>
-          <dd class="col-md-3 font-weight-bold">記録</dd>
-          <dd class="col-md-9"><?php echo $record;?></dd>
-
-          <!-- <input type='button' class="btn btn-info text-white m-3" onclick='history.back()' value='戻る'> -->
-
+          <dd class="col-md-9"><?php echo $prize;?></dd>
+          <div class="mt-3">
+            <a href="data_edit.php?action=rewrite" class="btn btn-info text-white">戻る</a>
+            <?php if(!empty($error_message)):?>
+              <input class="btn btn-primary text-white ml-3 disabled" type="submit" value="登録する" />
+            <?php else:?>
+              <input class="btn btn-primary text-white ml-3" type="submit" value="登録する" />
+            <?php endif; ?>
+          </div>
         </dl>
+      </form>
           <?php if($title != "") :?>
             <form method="post" action="data_add_edit_done.php">
               <input type="hidden" name="title" value="<?php echo $title;?>">
@@ -106,7 +176,7 @@ $_SESSION['USER'] =$user;
               <input type="hidden" name="token" value="<?php echo h($_SESSION['sstoken']); ?>" />
               </form>
           <?php endif; ?>
-
+            
     </div> <!--end row--> 
     </div> <!--end container-->
   </main>

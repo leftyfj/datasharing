@@ -53,8 +53,6 @@ if($_GET['s'] !='') {
   //キーワードを含むデータを検索するsql文
   //ホワイトリスト照合
   // ホワイトリストの準備（カラム）
- // $sort_whitelist = array('id' => 'id', 'rank' => '順位', 'title_ja' =>'邦題', 'title_en' => '原題', 'year' => '公開年', 'director' => '監督', 'producer' => '制作者', 'starring' => '出演', 'prize' => '受賞');
-  //$sort_whitelist = array('rank' => 'rank', 'title_ja' =>'title_ja', 'title_en' => 'title_en', 'year' => 'year', 'director' => 'director', 'producer' => 'producer', 'starring' => 'starring', 'prize' => 'prize');
 
    $sort_whitelist = [
      'rank'     => ['rank','順位'],
@@ -99,7 +97,6 @@ if($_GET['s'] !='') {
   //取得したデータを配列に収める
   $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
-  //4/7 ここから
   //抽出されたデータは何件あるか調べる
   $sqlForCounts = "SELECT count(*) FROM `data` 
   WHERE `title_ja` LIKE :title_ja 
@@ -205,10 +202,7 @@ if($_GET['s'] !='') {
                       <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
                     </th>
                   <?php endif;?>
-                <?php endforeach;?>
-
-                <th style="font-size:16px;" class="text-center"><input type="submit" id="amend" value="修正"></th>
-                <th style="font-size:16px;" class="text-center"><input type="submit" id="delete" value="削除"></th>
+                <?php endforeach;?> 
               </tr>
             </thead>
             <tbody>
@@ -219,12 +213,17 @@ if($_GET['s'] !='') {
                     <td style="width:18%"><?php echo $datum['title_ja']; ?></td>
                     <td style="width:19%"><?php echo $datum['title_en']; ?></td>
                     <td style="width:7%"><?php echo $datum['year']; ?></td>
-                    <td style="width:10%"><?php echo $datum['derector']; ?></td>
+                    <td style="width:10%"><?php echo $datum['director']; ?></td>
                     <td style="width:10%"><?php echo $datum['producer']; ?></td>
                     <td style="width:10%"><?php echo $datum['starring']; ?></td>
                     <td style="width:10%"><?php echo $datum['prize']; ?></td>
-                    <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php echo $datum['id'];?>"></td>
-                    <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php echo $datum['id'];?>"></td>
+                   <!-- <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php //echo $datum['id'];?>"></td>  $_POST['movie']としてデータのid番号を送る -->
+                    <!-- <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php //echo $datum['id'];?>"></td> -->
+                    <td style="width:12%">
+                    <a href="data_edit.php?id=<?php echo h($datum['id']); ?>">[編集]</a>
+    	              <a href="javascript:void(0);" onclick="var ok=confirm('削除しても宜しいですか?');
+                    if (ok) location.href='data_delete.php?id=<?php echo h($datum['id']); ?>'; return false;">[削除]</a>
+                    </td>
                   </tr>
                 <?php endforeach; ?>
              </tbody>
