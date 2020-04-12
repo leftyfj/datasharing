@@ -9,7 +9,8 @@ define('USER', 'root');
 define('PASS', 'hisa59');
 define('DB', 'oscar');
 define('SITE_URL', 'http://localhost/dev/datasharing/web/');
-   
+//modal.jsのsiteUrlを書き直すこと
+
     // データベース情報
 
   //さくらインターネット

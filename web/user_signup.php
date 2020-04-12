@@ -178,8 +178,9 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
                 <label class="form-check-label" for="nonadmin">利用者</label>
               </div>
             </div>
-            <button type="submit" class="btn btn- btn-primary mb-2">登録</button>
+            <button type="submit" class="btn btn- btn-primary mb-2">登録</button><br>
             <input type="hidden" name="token" value="<?php echo h($_SESSION['sstoken']); ?>" />
+            <input type="button" class="btn btn- btn-success mb-2" onclick="history.back()" value="戻る">
         </form>
 
     </div> <!--end container-->

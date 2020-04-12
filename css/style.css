@@ -38,6 +38,46 @@ header {
   border-radius: 10%;
 }
 
+#close {
+  cursor: pointer;
+  width: 30px;
+  text-align: right;
+  margin: 16px auto 0;
+}
+
+#mask {
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#mask.hidden {
+  display: none;
+}
+
+#modal {
+  width: 300px;
+  position: absolute;
+  top: 140px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  -webkit-transition: -webkit-transform 1.5s;
+  transition: -webkit-transform 1.5s;
+  transition: transform 1.5s;
+  transition: transform 1.5s, -webkit-transform 1.5s;
+  z-index: 2;
+}
+
+#modal.hidden {
+  -webkit-transform: translate(0, -500px);
+          transform: translate(0, -500px);
+}
+
 @media (max-width: 575.98px) {
   h1,
   h2,

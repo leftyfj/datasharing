@@ -13,6 +13,7 @@ if (!isset($_SESSION['USER'])) {
 
 $user = $_SESSION['USER'];
 $error_message ='';
+$flag='';
 setToken();
 
 if(empty($_SESSION['DATA']['title_ja'])) {
@@ -73,9 +74,9 @@ if(!empty($_POST)) {
 
   }
 
-    if($flag){
-      echo'登録しました';
-    }
+    // if($flag){
+    //   echo'登録しました';
+    // }
   //DBを切断
   unset($pdo);
 
@@ -99,7 +100,8 @@ $_SESSION['USER'] =$user;
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
   <title><?php echo SITE_TITEL; ?></title>
 </head>
-<body  style="padding-top:70px;">
+
+<body  style="padding-top:110px;">
     <header>
     <nav class="nav navbar fixed-top navbar-expand-lg navbar-dark bg-dark text-white ">
 		<div class="container ">
@@ -119,10 +121,8 @@ $_SESSION['USER'] =$user;
         </ul>
       </div>
 		</div>
-
   </nav>
   </header>
-
   <main>
     <div class="container pc-only bg-light p-4">
       <h2><caption><i class="fas fa-edit" style="color:orange;"></i>&nbsp;内容確認</caption></h2>
@@ -159,35 +159,51 @@ $_SESSION['USER'] =$user;
           </div>
         </dl>
       </form>
-          <?php if($title != "") :?>
+          <!-- <?php //if($title != "") :?>
             <form method="post" action="data_add_edit_done.php">
-              <input type="hidden" name="title" value="<?php echo $title;?>">
-              <input type="hidden" name="company" value="<?php echo $company;?>" >
-              <input type="hidden" name="producer" value="<?php echo $producer;?>" >
-              <input type="hidden" name="director" value="<?php echo $director;?>" >
-              <input type="hidden" name="starring" value="<?php echo $starring;?>" >
-              <input type="hidden" name="prize_check" value=<?php echo intval($starring);?>>
-              <input type="hidden" name="times" value="<?php echo $times;?>" >
-              <input type="hidden" name="year" value="<?php echo $year;?>" >
-              <input type="hidden" name="record" value="<?php echo $record;?>" >
-              <input type="hidden" name="amend" value="<?php echo $amend;?>">
+              <input type="hidden" name="title" value="<?php //echo $title;?>">
+              <input type="hidden" name="company" value="<?php //echo $company;?>" >
+              <input type="hidden" name="producer" value="<?php //echo $producer;?>" >
+              <input type="hidden" name="director" value="<?php //echo $director;?>" >
+              <input type="hidden" name="starring" value="<?php //echo $starring;?>" >
+              <input type="hidden" name="prize_check" value=<?php //echo intval($starring);?>>
+              <input type="hidden" name="times" value="<?php //echo $times;?>" >
+              <input type="hidden" name="year" value="<?php //echo $year;?>" >
+              <input type="hidden" name="record" value="<?php //echo $record;?>" >
+              <input type="hidden" name="amend" value="<?php //echo $amend;?>">
               <input type='button' class="btn btn-info text-white my-3" onclick='history.back()' value='戻る'><br>
               <input type='submit' class="btn btn-primary text-white" value='登録'>
-              <input type="hidden" name="token" value="<?php echo h($_SESSION['sstoken']); ?>" />
-              </form>
-          <?php endif; ?>
+              <input type="hidden" name="token" value="<?php //echo h($_SESSION['sstoken']); ?>" />
+            </form>
+          <?php //endif; ?> -->
             
     </div> <!--end row--> 
     </div> <!--end container-->
   </main>
+   <?php if($flag):?>
+      <div id="mask">
+    <?php else: ?>
+      <div id="mask" class="hidden">
+    <?php  endif;?>
+      </div>
+    <?php if($flag):?>
+      <section id="modal">
+    <?php else: ?>
+      <section id="modal" class="hidden">
+    <?php  endif;?>
+      <div class="alert alert-success fade show text-center">登録完了しました<span id="close" class="font-weight-bold">&nbsp;&times;</span></div>
+      <!-- <div id="close">閉じる</div> -->
+      </section>
   <footer>
+   
   </footer>
 
 <!-- <script src="../js/jquery.min.js"></script>
 <script src="../js/bootstrap.bundle.js"></script> -->
   <!-- ここから下記３行が抜けていた汗 -->
+
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
+  <script src="../js/modal.js"></script>
 </body>

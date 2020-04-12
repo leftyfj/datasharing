@@ -175,7 +175,7 @@ if($_GET['s'] !='') {
             </div> <!--end col-sm-8 -->
             <div class="col-sm-6 text-right">
               <button class="btn btn-outline-primary"><a href="javascript:void(0);" onclick="var ok=confirm('全データをダウンロードします。宜しいですか?');
-              if (ok) location.href='item_download.php'; return false;">データダウンロード</a></button>
+              if (ok) location.href='data_download.php'; return false;">データダウンロード</a></button>
             </div> <!--end col-sm-4 -->
           </div> <!--end row -->
 
@@ -203,19 +203,20 @@ if($_GET['s'] !='') {
                     </th>
                   <?php endif;?>
                 <?php endforeach;?> 
+                    <th></th>
               </tr>
             </thead>
             <tbody>
                 <?php foreach ($data as $datum) :?>
                   <tr>
                     <!-- <td><?php //echo $datum['id']; ?></td> -->
-                    <td style="width:4%"><?php echo $datum['rank']; ?></td>
-                    <td style="width:18%"><?php echo $datum['title_ja']; ?></td>
-                    <td style="width:19%"><?php echo $datum['title_en']; ?></td>
-                    <td style="width:7%"><?php echo $datum['year']; ?></td>
-                    <td style="width:10%"><?php echo $datum['director']; ?></td>
-                    <td style="width:10%"><?php echo $datum['producer']; ?></td>
-                    <td style="width:10%"><?php echo $datum['starring']; ?></td>
+                    <td style="width:5%"><?php echo $datum['rank']; ?></td>
+                    <td style="width:16%"><?php echo $datum['title_ja']; ?></td>
+                    <td style="width:16%"><?php echo $datum['title_en']; ?></td>
+                    <td style="width:5%"><?php echo $datum['year']; ?></td>
+                    <td style="width:11%"><?php echo $datum['director']; ?></td>
+                    <td style="width:11%"><?php echo $datum['producer']; ?></td>
+                    <td style="width:14%"><?php echo $datum['starring']; ?></td>
                     <td style="width:10%"><?php echo $datum['prize']; ?></td>
                    <!-- <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php //echo $datum['id'];?>"></td>  $_POST['movie']としてデータのid番号を送る -->
                     <!-- <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php //echo $datum['id'];?>"></td> -->
@@ -232,7 +233,6 @@ if($_GET['s'] !='') {
           </table>
           <div class="row">
             <div class="col-sm-6 ">
-              <a href="menu.php" class="btn btn-success text-white my-2">メニューへ戻る</a>
             </div>
             <div class="col-sm-6 d-flex align-items-center justify-content-end pr-3">
               <?php if($search_query !="") :?>
