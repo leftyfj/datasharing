@@ -34,12 +34,12 @@ h3 {
 }
 
 .show_version {
-  font-size: 16px;
+  font-size: 10px;
 }
 
-header {
-  height: 70px;
-}
+/* header {
+  height: 10px;
+} */
 
 .required {
   background-color: #BB1850;

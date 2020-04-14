@@ -178,4 +178,16 @@ function getVersionNo() {
     return $recNo;
 }
 
+//1ページに表示する件数を取得する
+function getPageCount($id) {
+    $pdo = connectDb();
+    $sql = "SELECT `show_data` FROM `user` WHERE id =:id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id',$id);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    //データベース接続を切断する
+    unset($pdo);
+    return $data['show_data'];
+}
 ?>

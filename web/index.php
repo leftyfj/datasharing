@@ -15,6 +15,7 @@ if (!isset($_SESSION['USER'])) {
 
 
 //ページネーション
+$page_count = getPageCount($user['id']);
 // 正規表現でパラメーターが数値かどうかのチェックを行う
 if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
 	// 正規表現にマッチしたらパラメーターをそのまま受け取る
@@ -26,8 +27,8 @@ if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
 
 //ページ開始は何件目のデータか算出
 //開始番号=１ページの件数 * (ページ番号-1)
-$offset = PAGE_COUNT * ($page -1);
-
+//$offset = PAGE_COUNT * ($page -1);
+$offset = $page_count * ($page -1);
 //getされたキーワードを受け取る
 $search_query = $_GET['q'];
 //$sortBy = 'name';
@@ -48,8 +49,7 @@ if($_GET['s'] !='') {
 
   //データベースに接続
   $pdo = connectDb();
-  
-  $recNo =getVersionNo();
+
   //キーワードを部分一致に変換、キーワードがなければ全件抽出
   //キーワードを含むデータを検索するsql文
   //ホワイトリスト照合
@@ -93,7 +93,7 @@ if($_GET['s'] !='') {
   $stmt ->bindValue(':starring', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmt ->bindValue(':prize', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
-  $stmt ->bindValue(':count', PAGE_COUNT, PDO::PARAM_INT);
+  $stmt ->bindValue(':count', $page_count, PDO::PARAM_INT);
   $stmt-> execute();
   //取得したデータを配列に収める
   $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -119,7 +119,7 @@ if($_GET['s'] !='') {
   $stmtForCounts-> execute();
   $total = $stmtForCounts->fetchColumn();
   //該当データのページ数
-  $total_page = ceil($total / PAGE_COUNT);
+  $total_page = ceil($total / $page_count);
 
   //データベース接続を切断する
   unset($pdo)

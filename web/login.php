@@ -216,6 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
           <div class="mt-3">
             <a class="fontsize_responsive" href="./password_reset.php">パスワードを忘れた方はこちらをクリック</a>
           </div>
+      </div><!--end panel-body-->
     </div> <!--end container-->
   </main>
   <footer>
