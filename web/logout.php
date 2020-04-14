@@ -32,7 +32,7 @@ $flag = $stmt->execute();
 $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
 $stmt_log = $pdo->prepare($sql_log);
 $stmt_log->bindValue(':user_id',$user_id);
-$stmt_log->bindValue(':action', $action_array['user_logout']);
+$stmt_log->bindValue(':action', $action_array['user_logout']."【ユーザーID:".$user_id."】");
 $stmt_log->execute();
 
 unset($pdo);

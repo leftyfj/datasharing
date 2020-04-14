@@ -131,7 +131,8 @@ $_SESSION['USER'] =$user;
           <li class="nav-item ml-4"><a href="index.php" class="nav-link disabled">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link disabled">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link disabled">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="admin.php" class="nav-link  disabled">ユーザー管理</a></li>
+          <li class="nav-item ml-4"><a href="personal_setting.php" class="nav-link text-white">個人設定</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link  disabled">管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link disabled">ログアウト</a></li>
         </ul>
       </div>
@@ -175,24 +176,6 @@ $_SESSION['USER'] =$user;
           </div>
         </dl>
       </form>
-          <!-- <?php //if($title != "") :?>
-            <form method="post" action="data_add_edit_done.php">
-              <input type="hidden" name="title" value="<?php //echo $title;?>">
-              <input type="hidden" name="company" value="<?php //echo $company;?>" >
-              <input type="hidden" name="producer" value="<?php //echo $producer;?>" >
-              <input type="hidden" name="director" value="<?php //echo $director;?>" >
-              <input type="hidden" name="starring" value="<?php //echo $starring;?>" >
-              <input type="hidden" name="prize_check" value=<?php //echo intval($starring);?>>
-              <input type="hidden" name="times" value="<?php //echo $times;?>" >
-              <input type="hidden" name="year" value="<?php //echo $year;?>" >
-              <input type="hidden" name="record" value="<?php //echo $record;?>" >
-              <input type="hidden" name="amend" value="<?php //echo $amend;?>">
-              <input type='button' class="btn btn-info text-white my-3" onclick='history.back()' value='戻る'><br>
-              <input type='submit' class="btn btn-primary text-white" value='登録'>
-              <input type="hidden" name="token" value="<?php //echo h($_SESSION['sstoken']); ?>" />
-            </form>
-          <?php //endif; ?> -->
-            
     </div> <!--end row--> 
     </div> <!--end container-->
   </main>

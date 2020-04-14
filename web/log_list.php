@@ -32,7 +32,7 @@ $offset = PAGE_COUNT * ($page -1);
 //データベースに接続
 $pdo = connectDb();
 
-$sql = "SELECT * FROM `history` ORDER BY `id` ASC LIMIT :offset, :count";
+$sql = "SELECT * FROM `history` ORDER BY `id` DESC LIMIT :offset, :count";
 $stmt = $pdo->prepare($sql);
 $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt ->bindValue(':count', PAGE_COUNT, PDO::PARAM_INT);
@@ -79,6 +79,7 @@ unset($pdo)
           <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
+          <li class="nav-item ml-4"><a href="personal_setting.php" class="nav-link text-white">個人設定</a></li>
           <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
         </ul>

@@ -6,13 +6,6 @@ ini_set('display_errors',0);
 error_reporting(0);
 session_start();
 
-//関数読み込み
-require_once('config.php');
-require_once('functions.php');
-ini_set('display_errors',0);
-error_reporting(0);
-session_start();
-
 $user = $_SESSION['USER'];
 $recNo = getVersionNo();
 if (!isset($_SESSION['USER'])) {
@@ -130,7 +123,6 @@ if($_GET['s'] !='') {
 
   //データベース接続を切断する
   unset($pdo)
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -151,10 +143,10 @@ if($_GET['s'] !='') {
 <body  style="padding-top:70px;">
     <header>
     <nav class="nav navbar fixed-top navbar-expand-lg navbar-dark bg-dark text-white ">
-		<div class="container ">
-      <h1><a href="index.php" class="navbar-brand">
+		<div class="container">
+      <h1"><a href="index.php" class="navbar-brand">
         データ共有システム
-      </a></h1>
+      </a></h1">
       <button class="navbar-toggler" data-toggle="collapse" data-target="#menu">
         <span class="navbar-toggler-icon"></span>
       </button>

@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
         $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
         $stmt_log = $pdo->prepare($sql_log);
         $stmt_log->bindValue(':user_id',$user['id']);
-        $stmt_log->bindValue(':action', $action_array['user_login']);
+        $stmt_log->bindValue(':action', $action_array['user_login']."【ユーザーID:".$user['id']."】");
         $stmt_log->execute();
 
         $_SESSION['USER'] = $user;
@@ -178,7 +178,8 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
           <li class="nav-item ml-4"><a href="index.php" class="nav-link disabled">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link disabled">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link disabled">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="user_admin.php" class="nav-link disabled">ユーザー管理</a></li>
+          <li class="nav-item ml-4"><a href="personal_setting.php" class="nav-link disabled">個人設定</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link disabled">管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link disabled">ログアウト</a></li>
         </ul>
       </div>

@@ -37,9 +37,9 @@ h3 {
   font-size: 10px;
 }
 
-/* header {
-  height: 10px;
-} */
+header {
+  height: 20px;
+}
 
 .required {
   background-color: #BB1850;

@@ -45,6 +45,7 @@ $action_array = array(
     'new_user' => 'ユーザー新規登録',
     'new_version' => 'バージョン変更_内容登録',
     'amend_version' => 'バージョン変更履歴修正',
-    'delete_version' => 'バージョン履歴削除'
+    'delete_version' => 'バージョン履歴削除',
+    'personal_setting' => '個人設定変更'
 )
 ?>

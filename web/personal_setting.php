@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
   $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
   $stmt_log = $pdo->prepare($sql_log);
   $stmt_log->bindValue(':user_id',$user['id']);
-  $stmt_log->bindValue(':action', $action_array['amend_data']."【".$title_ja."】");
+  $stmt_log->bindValue(':action', $action_array['personal_setting']."【ユーザーID:".$user['id']."】");
   $stmt_log->execute();
   
   //データベース接続を切断する
@@ -84,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
           <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
+          <li class="nav-item ml-4"><a href="personal_setting.php" class="nav-link text-white">個人設定</a></li>
           <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
         </ul>
@@ -100,6 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
           <div  class="form-group">
             <label for="show_data" class="font-weight-bold"><span class="fontsize_responsive">データ表示件数</span><span>&nbsp;(1ページ当たりの表示件数を設定します)</span></label>
             <select  class="form-control" name="show_data">
+              <!-- <option value= "<?php //echo $data['show_data']; ?>" selected> <?php //echo $data['show_data'];?></option> -->
+              <option value= "<?php echo $show_data; ?>" selected> <?php echo $show_data;?></option>
               <?php for($i=5; $i<21; $i++):?>
                 <?php if($i==$data['show_data']):?>
                   <option value= "<?php echo $i; ?>" selected> <?php echo $i;?></option>
