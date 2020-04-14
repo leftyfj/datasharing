@@ -10,7 +10,7 @@ if ($_SESSION['USER']['admin_check'] =='0') {
     header('Location: '.SITE_URL.'index.php');
     exit;
 }
-
+$recNo = getVersionNo();
 $user = $_SESSION['USER'];
 $user_id_to_edit = $_GET['id'];
 $flag ='';
@@ -114,7 +114,7 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?></title>
+  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -131,7 +131,7 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
           <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">ユーザー管理</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
         </ul>
       </div>
@@ -144,13 +144,6 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
    
       <div class="container bg-light p-3">
       <h2 id="inlineblock_for_over768" class="font-weight-bold"><caption><i class="fas fa-user-alt" style="color:orange;"></i></caption>&nbsp;ユーザー情報修正&nbsp;</h2>
-
-      <!-- <?php //if(!$user):?>
-        <div class="alert alert-danger alert-dismissable fade show" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <?php// echo $complete_msg; ?>
-        </div>
-        <?php //endif; ?> -->
         <form action="" method="POST" class="mb-2">
           <div class="form-group">
             <label for="user_name" class="font-weight-bold">ユーザーネーム<small>&emsp;(半角英数字20文字以内)</small></label>
@@ -193,11 +186,10 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
                 <label class="form-check-label" for="nonadmin">利用者</label>
               </div>
           </div>
-            <input class="btn btn-info" type="submit" value="修正">
+            <input class="btn btn-info mb-2" type="submit" value="修正"><br>
             <input type="hidden" name="token" value="<?php echo h($_SESSION['sstoken']); ?>" />
+            <input type="button"  class="btn btn-secondary text-white" onclick="history.back()" value="戻る">
         </form>
-        <input class="btn btn-outline-danger" type="submit" onclick="location.href='./user_delete.php'" value="退会">
-        <input type="hidden" name="token" value="<?php echo h($_SESSION['sstoken']); ?>" />
       </div>
     <hr>
     </div>

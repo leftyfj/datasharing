@@ -167,12 +167,14 @@ function h($original_str) {
 }
 
 //versiion no.を取得する
-function getVersionNo($pdo) {
+function getVersionNo() {
+    $pdo = connectDb();
     $sql = "SELECT * FROM `version` ORDER BY `id` DESC LIMIT 1";
     $stmt = $pdo -> query($sql);
     //$recNo = $stmt->fetch(PDO::FETCH_ASSOC);
     $recNo = $stmt->fetch();
     $recNo = "Version No.".$recNo['id'];
+    unset($pdo);
     return $recNo;
 }
 

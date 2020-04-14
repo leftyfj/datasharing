@@ -10,7 +10,7 @@ if (!isset($_SESSION['USER'])) {
     header('Location: '.SITE_URL.'login.php');
     exit;
 }
-
+$recNo = getVersionNo();
 $user = $_SESSION['USER'];
 
 if ($user['admin_check'] == '0') {
@@ -34,7 +34,7 @@ if ($user['admin_check'] == '0') {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?></title>
+  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -69,7 +69,7 @@ if ($user['admin_check'] == '0') {
       <li class="list-group-item"><a href="user_list.php" style="text-decoration:none;">&nbsp;&nbsp;&nbsp;編集・削除</a></li>
       <li class="list-group-item">アプリケーションバージョン管理</li>
       <li class="list-group-item"><a href="version_register.php" style="text-decoration:none;">&nbsp;&nbsp;&nbsp;内容登録</a></li>
-      <li class="list-group-item"><a href="version_list.php" style="text-decoration:none;">&nbsp;&nbsp;&nbsp;履歴一覧</a></li>
+      <li class="list-group-item"><a href="version_list.php" style="text-decoration:none;">&nbsp;&nbsp;&nbsp;編集・削除</a></li>
     </ul>
 
     </div> <!--end container-->

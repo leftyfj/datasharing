@@ -7,9 +7,15 @@ error_reporting(0);
 session_start();
 
 $user = $_SESSION['USER'];
-
+$recNo = getVersionNo();
 //データベースに接続する（PDOを使う）
 $pdo = connectDb();
+
+//ユーザーネームをDBから取得し配列を作る
+$sql = "SELECT `user_name` FROM `user`";
+$stmt = $pdo->query($sql);
+$users = $stmt->fetchALL();
+
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     // CSRF対策↓
@@ -48,15 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     $error_message = array();
 
     //入力チェック
-    if ($user_name == '') {
-    // エラーメッセージを配列に保存
-	    $error_message['user_name'] = 'ユーザーネームを入力して下さい。';
-    } else {
-        //ユーザーネームの登録有無チェック
-      if (!checkUserName($user_name, $pdo)) {
-        $error_message['user_name'] ="ユーザーネームが登録されていません。";
-      }
-    }
+    // if ($user_name == '') {
+    // // エラーメッセージを配列に保存
+	  //   $error_message['user_name'] = 'ユーザーネームを入力して下さい。';
+    // } else {
+    //     //ユーザーネームの登録有無チェック
+    //   if (!checkUserName($user_name, $pdo)) {
+    //     $error_message['user_name'] ="ユーザーネームが登録されていません。";
+    //   }
+    // }
 
     if ($user_password == '') {
     // エラーメッセージを配列に保存
@@ -155,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | ログイン</title>
+  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -185,13 +191,15 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
       <h2><caption><i class="fas fa-sign-in-alt" style="color:orange;"></i>&nbsp;ログイン</caption></h2>
       <div class="panel-body">
         <form action="" method="POST">
-          <div class="form-group">
+          <div  class="form-group">
             <label for="user_name" class="font-weight-bold"><span class="fontsize_responsive">ユーザーネーム</span></label>
-            <input id="user_name" class="form-control" type="text" name="user_name" value="<?php echo h($user_name);?>">
-            <?php if($error_message['user_name'] !=''): ?>
-              <small class="error text-danger"><?php echo $error_message['user_name'];?></small>
-            <?php endif;?>
-          </div> <!-- end form-group -->
+            <select  class="form-control" name="user_name">
+              <option value= ""></option>
+              <?php foreach ($users as $user): ?>
+                <option value= "<?php echo $user['user_name']; ?>"> <?php echo $user['user_name'];?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
           <div class="form-group">
             <label for="password" class="font-weight-bold"><span class="fontsize_responsive">パスワード</span></label>
             <input id="password" class="form-control" type="password" name="user_password" value="<?php echo h($user_password);?>">
@@ -199,7 +207,6 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
               <small class="error text-danger"><?php echo $error_message['user_password'];?></small>
             <?php endif;?>
           </div> <!--end form-group -->
-
           <button type="submit" class="btn btn-info  mb-2">ログイン</button>
           <div class="mt-3">
             <input type="checkbox" name="save" value="on"><span class="fontsize_responsive">次回から自動でログイン</span>

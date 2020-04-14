@@ -10,7 +10,7 @@ if ($_SESSION['USER']['admin_check'] =='0') {
     header('Location: '.SITE_URL.'index.php');
     exit;
 }
-
+$recNo = getVersionNo();
 $user = $_SESSION['USER'];
 $version_id_to_edit = $_GET['id'];
 
@@ -101,7 +101,7 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?></title>
+  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -143,8 +143,9 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
           <textarea type="text" row="3" name="changes" value="<?php echo $changes;?>"class="form-control form-control"><?php echo $changes;?></textarea>
         </div> <!--end form-group -->
         
-            <input class="btn btn-info" type="submit" value="修正">
+            <input class="btn btn-info mb-2" type="submit" value="修正"><br>
             <input type="hidden" name="token" value="<?php echo h($_SESSION['sstoken']); ?>" />
+            <input type="button"  class="btn btn-secondary text-white" onclick="history.back()" value="戻る">
         </form>
       </div>
     <hr>

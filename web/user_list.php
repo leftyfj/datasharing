@@ -12,7 +12,7 @@ if ($_SESSION['USER']['admin_check'] =='0') {
     header('Location: '.SITE_URL.'index.php');
     exit;
 }
-
+$recNo = getVersionNo();
 //ページネーション
 // 正規表現でパラメーターが数値かどうかのチェックを行う
 if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
@@ -63,7 +63,7 @@ unset($pdo)
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?></title>
+  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -118,8 +118,11 @@ unset($pdo)
                   </tr>
                 <?php endforeach; ?>
           </tbody>
+          
         </form>
+        
       </table>
+      <input type="button"  class="btn btn-secondary text-white" onclick="history.back()" value="戻る">
       <nav class="my-5">
         <ul class="pagination justify-content-center">
         <?php if($total_page >=2) :?>

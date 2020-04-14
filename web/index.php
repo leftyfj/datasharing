@@ -7,7 +7,7 @@ error_reporting(0);
 session_start();
 
 $user = $_SESSION['USER'];
-
+$recNo = getVersionNo();
 if (!isset($_SESSION['USER'])) {
     header('Location: '.SITE_URL.'login.php');
     exit;
@@ -49,7 +49,7 @@ if($_GET['s'] !='') {
   //データベースに接続
   $pdo = connectDb();
   
-  $recNo =getVersionNo($pdo);
+  $recNo =getVersionNo();
   //キーワードを部分一致に変換、キーワードがなければ全件抽出
   //キーワードを含むデータを検索するsql文
   //ホワイトリスト照合
@@ -138,7 +138,7 @@ if($_GET['s'] !='') {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?></title>
+  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -146,7 +146,7 @@ if($_GET['s'] !='') {
 		<div class="container">
       <h1"><a href="index.php" class="navbar-brand">
         データ共有システム
-      </a></h1"><span class="show_version">(<?php echo $recNo;?>)</span>
+      </a></h1">
       <button class="navbar-toggler" data-toggle="collapse" data-target="#menu">
         <span class="navbar-toggler-icon"></span>
       </button>

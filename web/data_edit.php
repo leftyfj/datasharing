@@ -12,7 +12,7 @@ if (!isset($_SESSION['USER'])) {
     header('Location: '.SITE_URL.'login.php');
     exit;
 }
-
+$recNo = getVersionNo();
 $former_url = $_SERVER['HTTP_REFERER'];
 
 if(strpos($former_url, SITE_URL.'index.php') == 0) {
@@ -68,7 +68,7 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | 登録・編集</title>
+  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -85,7 +85,7 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
           <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">ユーザー管理</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
         </ul>
       </div>
@@ -130,8 +130,9 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
           <label for="prize_check"">受賞</label>
           <input type="text" name="prize" value="<?php echo $movie['prize'];?>" class="form-control form-control">
         </div>
-        <div class="btn-group-vertical">
-          <button type="submit" class="btn btn-info text-white m-3">内容確認</button>
+        <div>
+          <button type="submit" class="btn btn-info text-white mb-2">内容確認</button><br>
+          <input type="button" class="btn btn-secondary text-white" onclick="history.back()" value="戻る">
         </div>
       </form>
 

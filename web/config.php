@@ -27,7 +27,7 @@ define('SITE_URL', 'http://localhost/dev/datasharing/web/');
     define('ADMIN_EMAIL', 'gwall59@gmail.com');
 
 //サイトtitle
-    define('SITE_TITEL', 'DataSharing_OSCAR');
+    define('SITE_TITEL', 'DataSharing');
 //ペーネーション
     define('PAGE_COUNT', 10);
 

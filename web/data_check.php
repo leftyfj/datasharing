@@ -11,6 +11,7 @@ if (!isset($_SESSION['USER'])) {
     exit;
 }
 
+$recNo = getVersionNo();
 $user = $_SESSION['USER'];
 $error_message ='';
 $flag='';
@@ -112,7 +113,7 @@ $_SESSION['USER'] =$user;
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?></title>
+  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
 </head>
 
 <body  style="padding-top:110px;">
@@ -164,12 +165,13 @@ $_SESSION['USER'] =$user;
           <dd class="col-md-3 font-weight-bold">受賞</dd>
           <dd class="col-md-9"><?php echo $prize;?></dd>
           <div class="mt-3">
-            <a href="data_edit.php?action=rewrite" class="btn btn-info text-white">戻る</a>
+            
             <?php if(!empty($error_message)):?>
-              <input class="btn btn-primary text-white ml-3 disabled" type="submit" value="登録する" />
+              <input class="btn btn-primary text-white ml-3 disabled" type="submit" value="登録する" /><br>
             <?php else:?>
-              <input class="btn btn-primary text-white ml-3" type="submit" value="登録する" />
+              <input class="btn btn-primary text-white ml-3" type="submit" value="登録する" /><br>
             <?php endif; ?>
+            <input type="button" class="btn btn-secondary text-white m-3" onclick="history.back()" value="戻る">
           </div>
         </dl>
       </form>
