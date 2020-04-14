@@ -32,7 +32,7 @@ $offset = PAGE_COUNT * ($page -1);
 //データベースに接続
 $pdo = connectDb();
 
-$sql = "SELECT * FROM `user` ORDER BY `id` ASC LIMIT :offset, :count";
+$sql = "SELECT * FROM `history` ORDER BY `id` ASC LIMIT :offset, :count";
 $stmt = $pdo->prepare($sql);
 $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt ->bindValue(':count', PAGE_COUNT, PDO::PARAM_INT);
@@ -41,12 +41,11 @@ $stmt-> execute();
 $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
 //レコードは何件あるか調べる
-$sqlForCounts = "SELECT count(*) FROM `user`"; 
+$sqlForCounts = "SELECT count(*) FROM `history`"; 
 $stmtForCounts = $pdo->query($sqlForCounts);
 $total = $stmtForCounts->fetchColumn();
 $total_page = ceil($total / PAGE_COUNT);
 //データベース接続を切断する
-
 unset($pdo)
 ?>
 <!DOCTYPE html>
@@ -90,33 +89,24 @@ unset($pdo)
   </header>
   <main>
     <div class="container bg-light p-4">
-      <h2><caption><i class="fas fa-users" style="color:orange;"></i>&nbsp;ユーザー一覧</caption></h2>
+      <h2><caption><i class="far fa-keyboard" style="color:orange;"></i>&nbsp;操作ログ一覧</caption></h2>
       <table class="table table-sm table-hover">
         <form action="data_edit.php" method="post">
           <thead class="thead-light">
             <tr>
-              <th>ID</th>
-              <th>ユーザーネーム</th>
-              <th>メールアドレス</th>
-              <th class="text-center">管理者権限</th>
-              <th class="text-center">編集・削除</th>
+              <th>ユーザーID</th>
+              <th>操作内容</th>
+              <th>日時</th>
             </tr>
           </thead>
           <tbody>
-                <?php foreach ($data as $datum) :?>
-                  <tr>
-                    <td><?php echo $datum['id']; ?></td>
-                    <td><?php echo $datum['user_name']; ?></td>
-                    <td><?php echo $datum['user_email']; ?></td>
-                    <?php $admin_check = $datum['admin_check'] ==1 ? '有':'無'?>
-                    <td class="text-center"><?php echo $admin_check;?></td>
-                    <td class="text-center">
-                      <a href="user_edit.php?id=<?php echo h($datum['id']); ?>">[編集]</a>
-                      <a href="javascript:void(0);" onclick="var ok=confirm('削除しても宜しいですか?');
-                      if (ok) location.href='user_delete.php?id=<?php echo h($datum['id']); ?>'; return false;">[削除]</a>
-                    </td>
-                  </tr>
-                <?php endforeach; ?>
+          <?php foreach ($data as $datum) :?>
+            <tr>
+              <td><?php echo $datum['user_id']; ?></td>
+              <td><?php echo $datum['action']; ?></td>
+              <td><?php echo $datum['updated_at']; ?></td>
+            </tr>
+          <?php endforeach; ?>
           </tbody>
         </form>
       </table>
@@ -124,23 +114,22 @@ unset($pdo)
         <ul class="pagination justify-content-center">
         <?php if($total_page >=2) :?>
           <?php if($page ==1):?>
-            <!-- <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li> -->
+            <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
           <?php else: ?>
-            <li class="page-item"><a href="?page=<?php echo $page-1;?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
+            <li class="page-item"><a href="?page=<?php echo $page-1;?>" class="page-link">&laquo</a></li>
           <?php endif;?>
 
           <?php for($i=1; $i<=$total_page; $i++): ?>
             <?php if($i==$page):?>
               <li class="page-item active"><a href="#" class="page-link"><?php echo $i;?></a></li>
             <?php else: ?>
-              <li class="page-item"><a href="?page=<?php echo $i;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo $i;?></a></li>
+              <li class="page-item"><a href="?page=<?php echo $i;?>" class="page-link"><?php echo $i;?></a></li>
             <?php endif;?>
           <?php endfor;?>
-          <?php if($page ==1):?>
-          <?php elseif($page ==$total_page):?>
+          <?php if($page ==$total_page):?>
             <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
           <?php else: ?> 
-            <li class="page-item"><a href="user_list.php" class="page-link">&raquo</a></li>
+            <li class="page-item"><a href="log_list.php?page=<?php echo $page+1;?>" class="page-link">&raquo</a></li>
           <?php endif;?>
         <?php endif;?>
         </ul>

@@ -85,7 +85,7 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
           <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="user_admin.php" class="nav-link text-white">ユーザー管理</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">ユーザー管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
         </ul>
       </div>

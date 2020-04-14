@@ -161,9 +161,19 @@ function getUserbyID($user_id, $pdo) {
 }
 
 //XSS対策
-  function h($original_str) {
-	    return htmlspecialchars($original_str, ENT_QUOTES, "UTF-8");
+function h($original_str) {
+	return htmlspecialchars($original_str, ENT_QUOTES, "UTF-8");
 
-    }
+}
+
+//versiion no.を取得する
+function getVersionNo($pdo) {
+    $sql = "SELECT * FROM `version` ORDER BY `id` DESC LIMIT 1";
+    $stmt = $pdo -> query($sql);
+    //$recNo = $stmt->fetch(PDO::FETCH_ASSOC);
+    $recNo = $stmt->fetch();
+    $recNo = "Version No.".$recNo['id'];
+    return $recNo;
+}
 
 ?>

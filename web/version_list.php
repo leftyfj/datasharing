@@ -6,6 +6,11 @@ ini_set('display_errors',0);
 error_reporting(0);
 session_start();
 
+if (!isset($_SESSION['USER'])) {
+    header('Location: '.SITE_URL.'login.php');
+    exit;
+}
+
 $user = $_SESSION['USER'];
 
 if ($_SESSION['USER']['admin_check'] =='0') {
@@ -32,7 +37,7 @@ $offset = PAGE_COUNT * ($page -1);
 //データベースに接続
 $pdo = connectDb();
 
-$sql = "SELECT * FROM `user` ORDER BY `id` ASC LIMIT :offset, :count";
+$sql = "SELECT * FROM `version` ORDER BY `id` ASC LIMIT :offset, :count";
 $stmt = $pdo->prepare($sql);
 $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt ->bindValue(':count', PAGE_COUNT, PDO::PARAM_INT);
@@ -41,13 +46,14 @@ $stmt-> execute();
 $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
 //レコードは何件あるか調べる
-$sqlForCounts = "SELECT count(*) FROM `user`"; 
+$sqlForCounts = "SELECT count(*) FROM `version`"; 
 $stmtForCounts = $pdo->query($sqlForCounts);
 $total = $stmtForCounts->fetchColumn();
 $total_page = ceil($total / PAGE_COUNT);
-//データベース接続を切断する
 
+//データベース接続を切断する
 unset($pdo)
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -80,7 +86,7 @@ unset($pdo)
           <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">管理</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">ユーザー管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
         </ul>
       </div>
@@ -89,31 +95,26 @@ unset($pdo)
   </nav>
   </header>
   <main>
-    <div class="container bg-light p-4">
-      <h2><caption><i class="fas fa-users" style="color:orange;"></i>&nbsp;ユーザー一覧</caption></h2>
+    <div class="container pc-only bg-light p-4">
+      <h2><caption><i class="fas fa-code-branch" style="color:orange;"></i>&nbsp;バージョン履歴一覧</caption></h2>
       <table class="table table-sm table-hover">
         <form action="data_edit.php" method="post">
           <thead class="thead-light">
             <tr>
-              <th>ID</th>
-              <th>ユーザーネーム</th>
-              <th>メールアドレス</th>
-              <th class="text-center">管理者権限</th>
+              <th class="text-center">No.</th>
+              <th class="text-center">内容</th>
               <th class="text-center">編集・削除</th>
             </tr>
           </thead>
           <tbody>
                 <?php foreach ($data as $datum) :?>
                   <tr>
-                    <td><?php echo $datum['id']; ?></td>
-                    <td><?php echo $datum['user_name']; ?></td>
-                    <td><?php echo $datum['user_email']; ?></td>
-                    <?php $admin_check = $datum['admin_check'] ==1 ? '有':'無'?>
-                    <td class="text-center"><?php echo $admin_check;?></td>
+                    <td class="text-right"><?php echo $datum['id']; ?></td>
+                    <td><?php echo $datum['changes']; ?></td>
                     <td class="text-center">
-                      <a href="user_edit.php?id=<?php echo h($datum['id']); ?>">[編集]</a>
+                      <a href="version_edit.php?id=<?php echo h($datum['id']); ?>">[編集]</a>
                       <a href="javascript:void(0);" onclick="var ok=confirm('削除しても宜しいですか?');
-                      if (ok) location.href='user_delete.php?id=<?php echo h($datum['id']); ?>'; return false;">[削除]</a>
+                      if (ok) location.href='version_delete.php?id=<?php echo h($datum['id']); ?>'; return false;">[削除]</a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -140,7 +141,7 @@ unset($pdo)
           <?php elseif($page ==$total_page):?>
             <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
           <?php else: ?> 
-            <li class="page-item"><a href="user_list.php" class="page-link">&raquo</a></li>
+            <li class="page-item"><a href="version_list.php" class="page-link">&raquo</a></li>
           <?php endif;?>
         <?php endif;?>
         </ul>
@@ -156,5 +157,5 @@ unset($pdo)
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
+  <script src="../js/modal_admin.js"></script>
 </body>

@@ -55,6 +55,13 @@ foreach ($data as $key => $datum) {
     // 作成した配列をCSV形式で一時ファイルに出力
     fputcsv($temp, $array);
 }
+
+//操作ログを登録する
+$sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
+$stmt_log = $pdo->prepare($sql_log);
+$stmt_log->bindValue(':user_id',$user['id']);
+$stmt_log->bindValue(':action', $action_array['download_data']);
+$stmt_log->execute();
 // データベース接続を切断する
 unset($pdo);
 

@@ -25,12 +25,33 @@ h3 {
   text-align: center;
 }
 
+h1 {
+  margin-bottom: 0;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+.show_version {
+  font-size: 16px;
+}
+
 header {
   height: 70px;
 }
 
 .required {
   background-color: #BB1850;
+  color: #fff;
+  font-size: 90%;
+  padding: 2px;
+  margin-left: 10px;
+  border-radius: 10%;
+}
+
+.optional {
+  background-color: #6c757d;
   color: #fff;
   font-size: 90%;
   padding: 2px;
@@ -60,7 +81,7 @@ header {
 }
 
 #modal {
-  width: 300px;
+  width: 500px;
   position: absolute;
   top: 140px;
   left: 0;

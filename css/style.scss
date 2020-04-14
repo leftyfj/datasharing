@@ -1,6 +1,7 @@
 $cwhite: #fff;
 $cBlack: #333;
 $cBlue: skyblue;
+$cGray: #6c757d;
 
 * {box-sizing: border-box;}
 
@@ -26,9 +27,19 @@ h3 {
   line-height: 1.5;
   letter-spacing: 0.2em;
   text-align: center;
-  
 }
 
+h1 {
+  margin-bottom: 0;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+.show_version {
+  font-size: 10px;
+}
 
 header {
     height: 70px;
@@ -36,6 +47,15 @@ header {
 
 .required {
 	background-color: #BB1850;
+	color: #fff;
+	font-size: 90%;
+	padding: 2px;
+  margin-left: 10px;
+  border-radius: 10%;
+}
+
+.optional {
+	background-color: $cGray;
 	color: #fff;
 	font-size: 90%;
 	padding: 2px;
@@ -69,7 +89,7 @@ header {
 
 #modal {
   // background: $cwhite;
-  width: 300px;
+  width: 500px;
   // padding: 20px;
   // border-radius: 4px;
   position: absolute;

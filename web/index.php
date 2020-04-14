@@ -48,7 +48,8 @@ if($_GET['s'] !='') {
 
   //データベースに接続
   $pdo = connectDb();
-
+  
+  $recNo =getVersionNo($pdo);
   //キーワードを部分一致に変換、キーワードがなければ全件抽出
   //キーワードを含むデータを検索するsql文
   //ホワイトリスト照合
@@ -143,9 +144,9 @@ if($_GET['s'] !='') {
     <header>
     <nav class="nav navbar fixed-top navbar-expand-lg navbar-dark bg-dark text-white ">
 		<div class="container">
-      <h1><a href="index.php" class="navbar-brand">
+      <h1"><a href="index.php" class="navbar-brand">
         データ共有システム
-      </a></h1>
+      </a></h1"><span class="show_version">(<?php echo $recNo;?>)</span>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#menu">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -154,7 +155,7 @@ if($_GET['s'] !='') {
           <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="user_admin.php" class="nav-link text-white">ユーザー管理</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
         </ul>
       </div>

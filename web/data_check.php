@@ -53,6 +53,14 @@ if(!empty($_POST)) {
     $stmt->bindValue(':updated_by',$user['id']);
   
     $flag = $stmt->execute();
+
+    //操作ログを登録する
+    $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
+    $stmt_log = $pdo->prepare($sql_log);
+    $stmt_log->bindValue(':user_id',$user['id']);
+    $stmt_log->bindValue(':action', $action_array['new_data']."【".$title_ja."】");
+    $stmt_log->execute();
+
   } else {
     //修正
   
@@ -72,6 +80,12 @@ if(!empty($_POST)) {
 
     $flag = $stmt->execute();
 
+    //操作ログを登録する
+    $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
+    $stmt_log = $pdo->prepare($sql_log);
+    $stmt_log->bindValue(':user_id',$user['id']);
+    $stmt_log->bindValue(':action', $action_array['amend_data']."【".$title_ja."】");
+    $stmt_log->execute();
   }
 
     // if($flag){
@@ -113,11 +127,11 @@ $_SESSION['USER'] =$user;
       </button>
       <div id="menu" class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto"> <!--ml-autoを入れるとメニューが右寄せされる -->
-          <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
-          <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
-          <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="user_admin" class="nav-link text-white">ユーザー管理</a></li>
-          <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
+          <li class="nav-item ml-4"><a href="index.php" class="nav-link disabled">一覧</a></li>
+          <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link disabled">登録・編集</a></li>
+          <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link disabled">一括登録</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link  disabled">ユーザー管理</a></li>
+          <li class="nav-item ml-4"><a href="logout.php" class="nav-link disabled">ログアウト</a></li>
         </ul>
       </div>
 		</div>

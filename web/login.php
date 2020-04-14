@@ -114,6 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
         // ↓セッションハイジャック対策
         session_regenerate_id(true);
+
+        //操作ログを登録する
+        $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
+        $stmt_log = $pdo->prepare($sql_log);
+        $stmt_log->bindValue(':user_id',$user['id']);
+        $stmt_log->bindValue(':action', $action_array['user_login']);
+        $stmt_log->execute();
+
         $_SESSION['USER'] = $user;
         header('Location: '.SITE_URL);
         exit;

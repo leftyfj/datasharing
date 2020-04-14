@@ -104,6 +104,13 @@ if(empty($err)) {
     $data_counter ++;
     // ループ終了
   }
+
+  //操作ログを登録する
+    $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
+    $stmt_log = $pdo->prepare($sql_log);
+    $stmt_log->bindValue(':user_id',$user['id']);
+    $stmt_log->bindValue(':action', $action_array['upload_collectively']);
+    $stmt_log->execute();
   //データベースから切断する
   unset($pdo);
   //完了メッセージを設定
@@ -141,7 +148,7 @@ if(empty($err)) {
           <li class="nav-item ml-4"><a href="index.php" class="nav-link text-white">一覧</a></li>
           <li class="nav-item ml-4"><a href="data_edit.php" class="nav-link text-white">登録・編集</a></li>
           <li class="nav-item ml-4"><a href="data_upload.php" class="nav-link text-white">一括登録</a></li>
-          <li class="nav-item ml-4"><a href="user_admin.php" class="nav-link text-white">ユーザー管理</a></li>
+          <li class="nav-item ml-4"><a href="admin.php" class="nav-link text-white">ユーザー管理</a></li>
           <li class="nav-item ml-4"><a href="logout.php" class="nav-link text-white">ログアウト</a></li>
         </ul>
       </div>
