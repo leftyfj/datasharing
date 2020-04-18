@@ -12,6 +12,10 @@ if ($_SESSION['USER']['admin_check'] =='0') {
     header('Location: '.SITE_URL.'index.php');
     exit;
 }
+
+// $sortBy = $_GET['s']; //ソートするカラム名を受け取る
+// $orderBy = $_GET['o']; //昇順か降順か
+
 $recNo = getVersionNo();
 //ページネーション
 // 正規表現でパラメーターが数値かどうかのチェックを行う
@@ -28,11 +32,39 @@ if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
 $offset = PAGE_COUNT * ($page -1);
 
 //ページネーション終わり
+//ソートに関するリクエストを受領
+if($_GET['o'] !='') {
+  $orderBy = $_GET['o']; //ソートのリクエストがあったときのget
+} else {
+  $orderBy = ASC;
+}
+
+if($_GET['s'] !='') {
+  $sortBy = $_GET['s']; //ソートのリクエストがあったときのget
+} else {
+  $sortBy = 'id';
+}
 
 //データベースに接続
 $pdo = connectDb();
 
-$sql = "SELECT * FROM `history` ORDER BY `id` DESC LIMIT :offset, :count";
+//ホワイトリスト照合
+// ホワイトリストの準備（カラム）
+$sort_whitelist = [
+    'id' => ['id', 'ID'],
+     'user_id' => ['user_id','ユーザーID'],
+     'updated_at' =>['updated_at', '日時']
+   ];
+
+$sort_safe = isset($sort_whitelist[$sortBy]) ? $sort_whitelist[$sortBy] : $sort_whitelist['id'];
+
+$order_whitelist = [
+  'asc' => 'ASC',
+  'desc' => 'DESC'
+];
+
+$order_safe = isset($order_whitelist[$orderBy]) ? $order_whitelist[$orderBy] : $order_whitelist['asc'];
+$sql = "SELECT * FROM `history` ORDER BY $sort_safe[0] $order_safe LIMIT :offset, :count";
 $stmt = $pdo->prepare($sql);
 $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt ->bindValue(':count', PAGE_COUNT, PDO::PARAM_INT);
@@ -45,6 +77,7 @@ $sqlForCounts = "SELECT count(*) FROM `history`";
 $stmtForCounts = $pdo->query($sqlForCounts);
 $total = $stmtForCounts->fetchColumn();
 $total_page = ceil($total / PAGE_COUNT);
+
 //データベース接続を切断する
 unset($pdo)
 ?>
@@ -89,23 +122,32 @@ unset($pdo)
   </nav>
   </header>
   <main>
+    <?php
+    if($orderBy =="desc") {
+      $arrow_icon = "fas fa-arrow-down";
+      $order = "asc";
+      } else {
+      $arrow_icon = "fas fa-arrow-up";
+      $order = "desc";
+      }
+    ?>
     <div class="container bg-light p-4">
       <h2><caption><i class="far fa-keyboard" style="color:orange;"></i>&nbsp;操作ログ一覧</caption></h2>
       <table class="table table-sm table-hover">
         <form action="data_edit.php" method="post">
           <thead class="thead-light">
             <tr>
-              <th>ユーザーID</th>
+              <th><a href="?s=<?php echo $sort_whitelist['user_id'][0];?>&o=<?php echo $order; ?>">ユーザーID<span><i class="<?php echo $arrow_icon;?>"></i></span></th>
               <th>操作内容</th>
-              <th>日時</th>
+              <th><a href="?s=<?php echo $sort_whitelist['updated_at'][0];?>&o=<?php echo $order; ?>">日時<span><i class="<?php echo $arrow_icon;?>"></i></span></a></th>
             </tr>
           </thead>
           <tbody>
           <?php foreach ($data as $datum) :?>
             <tr>
-              <td><?php echo $datum['user_id']; ?></td>
-              <td><?php echo $datum['action']; ?></td>
-              <td><?php echo $datum['updated_at']; ?></td>
+              <td style="width:20%"><?php echo $datum['user_id']; ?></td>
+              <td style="width:50%"><?php echo $datum['action']; ?></td>
+              <td style="width:30%"><?php echo $datum['updated_at']; ?></td>
             </tr>
           <?php endforeach; ?>
           </tbody>
@@ -118,19 +160,19 @@ unset($pdo)
             <?php if($page ==1):?>
               <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
             <?php else: ?>
-              <li class="page-item"><a href="?page=<?php echo $page-1;?>" class="page-link">&laquo</a></li>
+              <li class="page-item"><a href="?page=<?php echo $page-1;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>" class="page-link">&laquo</a></li>
             <?php endif;?>
             <?php for($i=1; $i<=$total_page; $i++): ?>
               <?php if($i==$page):?>
                 <li class="page-item active"><a href="#" class="page-link"><?php echo $i;?></a></li>
               <?php else: ?>
-                <li class="page-item"><a href="?page=<?php echo $i;?>" class="page-link"><?php echo $i;?></a></li>
+                <li class="page-item"><a href="?page=<?php echo $i;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>" class="page-link"><?php echo $i;?></a></li>
               <?php endif;?>
             <?php endfor;?>
             <?php if($page ==$total_page):?>
               <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
             <?php else: ?> 
-              <li class="page-item"><a href="log_list.php?page=<?php echo $page+1;?>" class="page-link">&raquo</a></li>
+              <li class="page-item"><a href="log_list.php?page=<?php echo $page+1;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>" class="page-link">&raquo</a></li>
             <?php endif;?>
           </ul>
         </nav>
