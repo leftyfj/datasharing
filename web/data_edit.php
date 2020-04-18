@@ -16,7 +16,9 @@ $recNo = getVersionNo();
 $former_url = $_SERVER['HTTP_REFERER'];
 
 if(strpos($former_url, SITE_URL.'index.php') == 0) {
-
+  // CSRF対策↓
+  //setToken();
+  
   $id_to_edit = $_GET['id'];
   //データベースに接続する
   $pdo = connectDb();
@@ -69,7 +71,7 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -100,49 +102,51 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
       <form action="" method="post">
         <div class="form-group mb-4">
           <label for="rank">Ref.No.</label>
-          <input type="text" name="ref" value="<?php echo $movie['ref'];?>"class="form-control form-control">
-          <input type="hidden" name="amend" value="<?php echo $movie['id'];?>">
+          <input type="text" name="ref" value="<?php echo h($movie['ref']);?>"class="form-control form-control">
+          <input type="hidden" name="amend" value="<?php echo h($movie['id']);?>">
         </div>
         <div class="form-group mb-4">
           <label for="title">タイトル<span class="required">必須</span></label>
-          <input type="text" name="title" value="<?php echo $movie['title'];?>"class="form-control form-control">
+          <input type="text" name="title" value="<?php echo h($movie['title']);?>"class="form-control form-control">
         </div>
         <div class="form-group mb-4">
           <label for="year">年</label>
-          <input type="number" name="year" value="<?php echo $movie['year'];?>" class="form-control form-control">
+          <input type="number" name="year" value="<?php echo h($movie['year']);?>" class="form-control form-control">
         </div>
            <div class="form-group mb-4">
           <label for="genre">ジャンル</label>
-          <input type="text" name="genre" value="<?php echo $movie['genre'];?>"class="form-control form-control">
+          <input type="text" name="genre" value="<?php echo h($movie['genre']);?>"class="form-control form-control">
         </div>
            <div class="form-group mb-4">
           <label for="duration">公開期間</label>
-          <input type="text" name="duration" value="<?php echo $movie['duration'];?>"class="form-control form-control">
+          <input type="text" name="duration" value="<?php echo h($movie['duration']);?>"class="form-control form-control">
         </div>
         <div class="form-group mb-4">
           <label for="director">監督</label>
-          <input type="text" name="director" value="<?php echo $movie['director'];?>" class="form-control form-control">
+          <input type="text" name="director" value="<?php echo h($movie['director']);?>" class="form-control form-control">
         </div>
         <div class="form-group mb-4">
           <label for="writer">脚本</label>
-          <input type="text" name="writer" value="<?php echo $movie['writer'];?>" class="form-control form-control">
+          <input type="text" name="writer" value="<?php echo h($movie['writer']);?>" class="form-control form-control">
         </div>
            <div class="form-group mb-4">
           <label for="production">制作</label>
-          <input type="text" name="production" value="<?php echo $movie['production'];?>"class="form-control form-control">
+          <input type="text" name="production" value="<?php echo h($movie['production']);?>"class="form-control form-control">
         </div>
         <div class="form-group mb-4">
           <label for="actors">出演</label>
-          <input type="text" name="actors" value="<?php echo $movie['actors'];?>" class="form-control form-control">
+          <input type="text" name="actors" value="<?php echo h($movie['actors']);?>" class="form-control form-control">
         </div>
         <div class="form-group mb-4">
           <label for="description">内容</label>
-          <input type="text" name="description" value="<?php echo $movie['description'];?>" class="form-control form-control">
+          <input type="text" name="description" value="<?php echo h($movie['description']);?>" class="form-control form-control">
         </div>
         <div>
+          <!-- <input type="hidden" name="token" value="<?php //echo h($_SESSION['sstoken']); ?>" /> -->
           <button type="submit" class="btn btn-info text-white mb-2">内容確認</button><br>
           <input type="button" class="btn btn-secondary text-white" onclick="history.back()" value="戻る">
         </div>
+        
       </form>
 
     </div> <!--end container-->

@@ -95,7 +95,7 @@ unset($pdo)
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -137,17 +137,17 @@ unset($pdo)
         <form action="data_edit.php" method="post">
           <thead class="thead-light">
             <tr>
-              <th><a href="?s=<?php echo $sort_whitelist['user_id'][0];?>&o=<?php echo $order; ?>">ユーザーID<span><i class="<?php echo $arrow_icon;?>"></i></span></th>
+              <th><a href="?s=<?php echo h($sort_whitelist['user_id'][0]);?>&o=<?php echo h($order); ?>">ユーザーID<span><i class="<?php echo h($arrow_icon);?>"></i></span></th>
               <th>操作内容</th>
-              <th><a href="?s=<?php echo $sort_whitelist['updated_at'][0];?>&o=<?php echo $order; ?>">日時<span><i class="<?php echo $arrow_icon;?>"></i></span></a></th>
+              <th><a href="?s=<?php echo h($sort_whitelist['updated_at'][0]);?>&o=<?php echo h($order); ?>">日時<span><i class="<?php echo h($arrow_icon);?>"></i></span></a></th>
             </tr>
           </thead>
           <tbody>
           <?php foreach ($data as $datum) :?>
             <tr>
-              <td style="width:20%"><?php echo $datum['user_id']; ?></td>
-              <td style="width:50%"><?php echo $datum['action']; ?></td>
-              <td style="width:30%"><?php echo $datum['updated_at']; ?></td>
+              <td style="width:20%"><?php echo h($datum['user_id']); ?></td>
+              <td style="width:50%"><?php echo h($datum['action']); ?></td>
+              <td style="width:30%"><?php echo h($datum['updated_at']); ?></td>
             </tr>
           <?php endforeach; ?>
           </tbody>
@@ -160,19 +160,19 @@ unset($pdo)
             <?php if($page ==1):?>
               <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
             <?php else: ?>
-              <li class="page-item"><a href="?page=<?php echo $page-1;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>" class="page-link">&laquo</a></li>
+              <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&s=<?php echo h($sortBy);?>&o=<?php echo $h(orderBy);?>" class="page-link">&laquo</a></li>
             <?php endif;?>
             <?php for($i=1; $i<=$total_page; $i++): ?>
               <?php if($i==$page):?>
-                <li class="page-item active"><a href="#" class="page-link"><?php echo $i;?></a></li>
+                <li class="page-item active"><a href="#" class="page-link"><?php echo h($i);?></a></li>
               <?php else: ?>
-                <li class="page-item"><a href="?page=<?php echo $i;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>" class="page-link"><?php echo $i;?></a></li>
+                <li class="page-item"><a href="?page=<?php echo h($i);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>" class="page-link"><?php echo h($i);?></a></li>
               <?php endif;?>
             <?php endfor;?>
             <?php if($page ==$total_page):?>
               <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
             <?php else: ?> 
-              <li class="page-item"><a href="log_list.php?page=<?php echo $page+1;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>" class="page-link">&raquo</a></li>
+              <li class="page-item"><a href="log_list.php?page=<?php echo h($page)+1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>" class="page-link">&raquo</a></li>
             <?php endif;?>
           </ul>
         </nav>

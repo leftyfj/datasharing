@@ -123,7 +123,7 @@ $_SESSION['USER'] = $user;
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body>
     <header>
@@ -156,17 +156,17 @@ $_SESSION['USER'] = $user;
             <div class="form-group <?php if($error_message['user_name'] !='') echo 'has-error'; ?>">
                 <label class="font-weight-bold" for="user_name">ユーザーネーム<small>&emsp;(半角英数字20文字以内)</small></label><br/>
                 <input id="user_name" class="form-control" type="text" name="user_name" value ="<?php echo h($user_name);?>" placeholder="ユーザーネーム">
-                <span class="help-block text-danger"><?php echo $error_message['user_name']; ?></span>
+                <span class="help-block text-danger"><?php echo h($error_message['user_name']); ?></span>
             </div>
             <div class="form-group <?php if($error_message['user_email'] !='') echo 'has-error'; ?>">
                 <label class="font-weight-bold">メールアドレス<small>&emsp;(半角英数字50文字以内)</small></label><br/>
                 <input class="form-control" type="text" name="user_email" value ="<?php echo h($user_email);?>" placeholder="メールアドレス">
-                <span class="help-block text-danger"><?php echo $error_message['user_email']; ?></span>
+                <span class="help-block text-danger"><?php echo h($error_message['user_email']); ?></span>
             </div>
             <div class="form-group <?php if($error_message['user_password'] !='') echo 'has-error'; ?>">
                 <label class="font-weight-bold">パスワード<small>&emsp;(半角英数字20文字以内)</small></label><br/>
                 <input class="form-control" type="password" name="user_password" value ="<?php echo h($user_password);?>" placeholder="パスワード">
-                <span class="help-block text-danger"><?php echo $error_message['user_password']; ?></span>
+                <span class="help-block text-danger"><?php echo h($error_message['user_password']); ?></span>
             </div>
             <div class="form-group mb-4">
               <label class="font-weight-bold mr-4">アクセス権限</label>

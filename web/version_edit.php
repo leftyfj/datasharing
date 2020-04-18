@@ -101,7 +101,7 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -132,16 +132,10 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
    
       <div class="container bg-light p-3">
       <h2 id="inlineblock_for_over768" class="font-weight-bold"><caption><i class="fas fa-user-alt" style="color:orange;"></i></caption>&nbsp;バージョン変更履歴修正&nbsp;</h2>
-      <!-- <?php //if(!$user):?>
-        <div class="alert alert-danger alert-dismissable fade show" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <?php// echo $complete_msg; ?>
-        </div>
-        <?php //endif; ?> -->
         <form action="" method="POST" class="mb-2">
         <div class="form-group">
           <label for="changes">内容<span class="required">必須</span></label>
-          <textarea type="text" row="3" name="changes" value="<?php echo $changes;?>"class="form-control form-control"><?php echo $changes;?></textarea>
+          <textarea type="text" row="3" name="changes" value="<?php echo h($changes);?>"class="form-control form-control"><?php echo h($changes);?></textarea>
         </div> <!--end form-group -->
         
             <input class="btn btn-info mb-2" type="submit" value="修正"><br>

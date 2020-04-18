@@ -86,7 +86,7 @@ $_SESSION['USER'] = $user;
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITE); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -119,7 +119,7 @@ $_SESSION['USER'] = $user;
       <form action="" method="post">
         <div class="form-group mb-4">
           <label for="changes">内容<span class="required">必須</span></label>
-          <textarea type="text" row="3" name="changes" value="<?php echo $changes;?>"class="form-control form-control"><?php echo $changes;?></textarea>
+          <textarea type="text" row="3" name="changes" value="<?php echo h($changes);?>"class="form-control form-control"><?php echo h($changes);?></textarea>
         </div>
        
         <div class="btn-group-vertical">

@@ -107,8 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
         }
 
-        // ↓セッションハイジャック対策
-        session_regenerate_id(true);
+        
 
         //操作ログを登録する
         $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
@@ -132,8 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
       $clickLogo = "./login.php";
     }
 
-
     unset($pdo);
+  
 }
 ?>
 <!DOCTYPE html>
@@ -150,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -186,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             <select  class="form-control" name="user_name">
               <option value= ""></option>
               <?php foreach ($users as $user): ?>
-                <option value= "<?php echo $user['user_name']; ?>"> <?php echo $user['user_name'];?></option>
+                <option value= "<?php echo h($user['user_name']); ?>"> <?php echo h($user['user_name']);?></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -194,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             <label for="password" class="font-weight-bold"><span class="fontsize_responsive">パスワード</span></label>
             <input id="password" class="form-control" type="password" name="user_password" value="<?php echo h($user_password);?>">
             <?php if($error_message['user_password'] !=''): ?>
-              <small class="error text-danger"><?php echo $error_message['user_password'];?></small>
+              <small class="error text-danger"><?php echo h($error_message['user_password']);?></small>
             <?php endif;?>
           </div> <!--end form-group -->
           <button type="submit" class="btn btn-info  mb-2">ログイン</button>

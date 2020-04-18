@@ -215,11 +215,11 @@ if($_GET['s'] !='') {
                 <?php foreach($sort_whitelist as $column): ?>
                   <?php if($column[0] == $sortBy):?>
                     <th>
-                      <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
+                      <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo h($arrow_icon);?>"></i></span></a>
                     </th>
                   <?php else:?>
                     <th>
-                      <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo $arrow_icon;?>"></i></span></a>
+                      <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo h($arrow_icon);?>"></i></span></a>
                     </th>
                   <?php endif;?>
                 <?php endforeach;?> 
@@ -230,18 +230,16 @@ if($_GET['s'] !='') {
                 <?php foreach ($data as $datum) :?>
                   <tr>
                     <!-- <td><?php //echo $datum['id']; ?></td> -->
-                    <td style="width:6%"><?php echo $datum['ref']; ?></td>
-                    <td style="width:9%"><?php echo $datum['title']; ?></td>
-                    <td style="width:5%"><?php echo $datum['year']; ?></td>
-                    <td style="width:5%"><?php echo $datum['genre']; ?></td>
-                    <td style="width:5%"><?php echo $datum['duration']; ?></td>
-                    <td style="width:10%"><?php echo $datum['director']; ?></td>
-                    <td style="width:10%"><?php echo $datum['writer']; ?></td>
-                    <td style="width:10%"><?php echo $datum['production']; ?></td>
-                    <td style="width:10%"><?php echo $datum['actors']; ?></td>
-                    <td style="width:20%"><?php echo $datum['description']; ?></td>
-                   <!-- <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php //echo $datum['id'];?>"></td>  $_POST['movie']としてデータのid番号を送る -->
-                    <!-- <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php //echo $datum['id'];?>"></td> -->
+                    <td style="width:6%"><?php echo h($datum['ref']); ?></td>
+                    <td style="width:9%"><?php echo h($datum['title']); ?></td>
+                    <td style="width:5%"><?php echo h($datum['year']); ?></td>
+                    <td style="width:5%"><?php echo h($datum['genre']); ?></td>
+                    <td style="width:5%"><?php echo h($datum['duration']); ?></td>
+                    <td style="width:10%"><?php echo h($datum['director']); ?></td>
+                    <td style="width:10%"><?php echo h($datum['writer']); ?></td>
+                    <td style="width:10%"><?php echo h($datum['production']); ?></td>
+                    <td style="width:10%"><?php echo h($datum['actors']); ?></td>
+                    <td style="width:20%"><?php echo h($datum['description']); ?></td>
                     <td style="width:10%">
                     <a href="data_edit.php?id=<?php echo h($datum['id']); ?>">[編集]</a>
     	              <a href="javascript:void(0);" onclick="var ok=confirm('削除しても宜しいですか?');
@@ -275,19 +273,19 @@ if($_GET['s'] !='') {
         <?php if($page ==1):?>
           <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
         <?php else: ?>
-          <li class="page-item"><a href="?page=<?php echo $page-1;?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
+          <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
         <?php endif;?>
         <?php for($i=1; $i<=$total_page; $i++): ?>
           <?php if($i==$page):?>
-            <li class="page-item active"><a href="#" class="page-link"><?php echo $i;?></a></li>
+            <li class="page-item active"><a href="#" class="page-link"><?php echo h($i);?></a></li>
           <?php else: ?>
-            <li class="page-item"><a href="?page=<?php echo $i;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo $i;?></a></li>
+            <li class="page-item"><a href="?page=<?php echo h($i);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo h($i);?></a></li>
           <?php endif;?>
         <?php endfor;?>
         <?php if($page ==$total_page):?>
           <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
         <?php else: ?> 
-          <li class="page-item"><a href="item_list.php?page=<?php echo $page+1;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>&q=<?php echo h($search_query);?>" class="page-link">&raquo</a></li>
+          <li class="page-item"><a href="item_list.php?page=<?php echo h($page)+1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">&raquo</a></li>
         <?php endif;?>
         </ul>
     </nav>

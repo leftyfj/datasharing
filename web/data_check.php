@@ -6,17 +6,19 @@ ini_set('display_errors',0);
 error_reporting(0);
 session_start();
 
+echo '1 ';
 if (!isset($_SESSION['USER'])) {
     header('Location: '.SITE_URL.'login.php');
     exit;
 }
-
+echo '2 ';
 $recNo = getVersionNo();
 $user = $_SESSION['USER'];
 $error_message ='';
 $flag='';
-setToken();
 
+//setToken();
+echo '3 ';
 $ref = $_SESSION['DATA']['ref'] == "" ? '':$_SESSION['DATA']['ref'];
 if(empty($_SESSION['DATA']['title'])) {
   $error_message ="タイトルの入力は必須です";
@@ -31,8 +33,16 @@ $writer = $_SESSION['DATA']['writer'] == "" ? '': $_SESSION['DATA']['writer'];
 $production = $_SESSION['DATA']['production'] == "" ? '': $_SESSION['DATA']['production'];
 $actors = $_SESSION['DATA']['actors'] == "" ? '': $_SESSION['DATA']['actors'];
 $description = $_SESSION['DATA']['description'] == "" ? '': $_SESSION['DATA']['description'] ;
-
+echo '4 ';
+ // CSRF対策↓
+	setToken();
 if(!empty($_POST)) {
+echo '5 ';
+// CSRF対策↓
+echo h($_SESSION['sstoken']);
+ checkToken();
+ // CSRF対策↓
+	//setToken();
   //新規登録か修正か判断する
   $pdo = connectDb();
 
@@ -68,10 +78,12 @@ if(!empty($_POST)) {
       $stmt_log->execute();
     }
    
-
+echo '6 ';
   } else {
     //修正
-
+    // CSRF対策↓
+    checkToken();
+   echo '7 '; 
     $sql = "UPDATE data SET ref = :ref, title =:title, genre = :genre, duration = :duration, year = :year, director = :director, 
     writer = :writer, production = :production, actors = :actors, description = :description, updated_by = :updated_by WHERE id =:id";
 
@@ -90,7 +102,7 @@ if(!empty($_POST)) {
     $stmt->bindValue(':id',$_SESSION['DATA']['amend']);
 
     $flag = $stmt->execute();
-
+echo '8 ';
     if($flag) {
       //操作ログを登録する
       $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
@@ -99,7 +111,7 @@ if(!empty($_POST)) {
       $stmt_log->bindValue(':action', $action_array['amend_data']."【".$ref." | ".$title."】");
       $stmt_log->execute();
     }
-    
+ echo '9 ';   
   }
 
     // if($flag){
@@ -109,7 +121,7 @@ if(!empty($_POST)) {
   unset($pdo);
 
 }
-
+echo '10';
 $_SESSION['USER'] =$user;
 ?>
 <!DOCTYPE html>
@@ -126,7 +138,7 @@ $_SESSION['USER'] =$user;
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 
 <body  style="padding-top:110px;">
@@ -159,31 +171,32 @@ $_SESSION['USER'] =$user;
         <input type="hidden" name="action" value="submit" />
         <dl class="row">
          <dd class="col-md-3 font-weight-bold">Ref.No.</dd>
-          <dd class="col-md-9 "><?php echo $ref;?></dd>
+          <dd class="col-md-9 "><?php echo h($ref);?></dd>
           <dd class="col-md-3 font-weight-bold">タイトル</dd>
           <?php if($error_message):?>
-            <dd class="col-md-9 text-danger font-weight-bold"><?php echo $error_message;?></dd>
+            <dd class="col-md-9 text-danger font-weight-bold"><?php echo h($error_message);?></dd>
           <?php else:?>
-            <dd class="col-md-9 "><?php echo $title;?></dd>
+            <dd class="col-md-9 "><?php echo h($title);?></dd>
           <?php endif;?>
           <dd class="col-md-3 font-weight-bold">公開年</dd>
-          <dd class="col-md-9"><?php echo $year;?></dd>
+          <dd class="col-md-9"><?php echo h($year);?></dd>
           <dd class="col-md-3 font-weight-bold">ジャンル</dd>
-          <dd class="col-md-9"><?php echo $genre;?></dd>
+          <dd class="col-md-9"><?php echo h($genre);?></dd>
           <dd class="col-md-3 font-weight-bold">公開期間</dd>
-          <dd class="col-md-9"><?php echo $duration;?></dd>
+          <dd class="col-md-9"><?php echo h($duration);?></dd>
           <dd class="col-md-3 font-weight-bold">監督</dd>
-          <dd class="col-md-9"><?php echo $director;?></dd>
+          <dd class="col-md-9"><?php echo h($directorh);?></dd>
           <dd class="col-md-3 font-weight-bold">脚本</dd>
-          <dd class="col-md-9"><?php echo $writer;?></dd>
+          <dd class="col-md-9"><?php echo h($writer);?></dd>
           <dd class="col-md-3 font-weight-bold">制作</dd>
-          <dd class="col-md-9"><?php echo $production;?></dd>
+          <dd class="col-md-9"><?php echo h($production);?></dd>
           <dd class="col-md-3 font-weight-bold">出演</dd>
-          <dd class="col-md-9"><?php echo $actors;?></dd>
+          <dd class="col-md-9"><?php echo h($actors);?></dd>
           <dd class="col-md-3 font-weight-bold">内容</dd>
-          <dd class="col-md-9"><?php echo $description;?></dd>
+          <dd class="col-md-9"><?php echo h($description);?></dd>
           <div class="mt-3">
-            
+          <?php echo h($_SESSION['sstoken']); ?>
+             <input type="hidden" name="token" value="<?php echo h($_SESSION['sstoken']); ?>" />
             <?php if(!empty($error_message)):?>
               <input class="btn btn-primary text-white ml-3 disabled" type="submit" value="登録する" /><br>
             <?php else:?>

@@ -63,7 +63,7 @@ unset($pdo)
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -106,11 +106,11 @@ unset($pdo)
           <tbody>
                 <?php foreach ($data as $datum) :?>
                   <tr>
-                    <td><?php echo $datum['id']; ?></td>
-                    <td><?php echo $datum['user_name']; ?></td>
-                    <td><?php echo $datum['user_email']; ?></td>
+                    <td><?php echo h($datum['id']); ?></td>
+                    <td><?php echo h($datum['user_name']); ?></td>
+                    <td><?php echo h($datum['user_email']); ?></td>
                     <?php $admin_check = $datum['admin_check'] ==1 ? '有':'無'?>
-                    <td class="text-center"><?php echo $admin_check;?></td>
+                    <td class="text-center"><?php echo h($admin_check);?></td>
                     <td class="text-center">
                       <a href="user_edit.php?id=<?php echo h($datum['id']); ?>">[編集]</a>
                       <a href="javascript:void(0);" onclick="var ok=confirm('削除しても宜しいですか?');
@@ -130,14 +130,14 @@ unset($pdo)
           <?php if($page ==1):?>
             <!-- <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li> -->
           <?php else: ?>
-            <li class="page-item"><a href="?page=<?php echo $page-1;?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
+            <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
           <?php endif;?>
 
           <?php for($i=1; $i<=$total_page; $i++): ?>
             <?php if($i==$page):?>
-              <li class="page-item active"><a href="#" class="page-link"><?php echo $i;?></a></li>
+              <li class="page-item active"><a href="#" class="page-link"><?php echo h($i);?></a></li>
             <?php else: ?>
-              <li class="page-item"><a href="?page=<?php echo $i;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo $i;?></a></li>
+              <li class="page-item"><a href="?page=<?php echo h($i);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo $i;?></a></li>
             <?php endif;?>
           <?php endfor;?>
           <?php if($page ==1):?>

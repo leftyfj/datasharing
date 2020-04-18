@@ -114,7 +114,7 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -150,14 +150,14 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
             <label for="user_name" class="font-weight-bold">ユーザーネーム<small>&emsp;(半角英数字20文字以内)</small></label>
             <input id="user_name" class="form-control" type="text" name="user_name" value="<?php echo h($user_name);?>">
             <?php if($error_message['user_name'] !=''): ?>
-            <small class="error text-danger"><?php echo $error_message['user_name'];?></small>
+            <small class="error text-danger"><?php echo h($error_message['user_name']);?></small>
             <?php endif;?>
           </div> <!--end form-group -->
           <div class="form-group">
             <label for="email" class="font-weight-bold">メールアドレス<small>&emsp;(半角英数字50文字以内)</small></label>
             <input id="email" class="form-control" type="text" name="user_email" value="<?php echo h($user_email);?>">
             <?php if($error_message['user_email'] !=''): ?>
-              <small class="error text-danger"><?php echo $error_message['user_email'];?></small>
+              <small class="error text-danger"><?php echo h($error_message['user_email']);?></small>
             <?php endif;?>
           </div>
           <div class="form-group">
@@ -165,7 +165,7 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
                     <!-- <input id="password" class="form-control" type="password" name="user_password" value="<?php echo h($user_password);?>"> -->
             <input id="password" class="form-control" type="password" name="user_password">
             <?php if($error_message['user_password'] !=''): ?>
-            <small class="error text-danger"><?php echo $error_message['user_password'];?></small>
+            <small class="error text-danger"><?php echo h($error_message['user_password']);?></small>
             <?php endif;?>        
           </div> <!--end form-group -->
           <div class="form-group mb-4">

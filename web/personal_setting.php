@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -101,13 +101,13 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
           <div  class="form-group">
             <label for="show_data" class="font-weight-bold"><span class="fontsize_responsive">データ表示件数</span><span>&nbsp;(1ページ当たりの表示件数を設定します)</span></label>
             <select  class="form-control" name="show_data">
-              <!-- <option value= "<?php //echo $data['show_data']; ?>" selected> <?php //echo $data['show_data'];?></option> -->
-              <option value= "<?php echo $show_data; ?>" selected> <?php echo $show_data;?></option>
+
+              <option value= "<?php echo h($show_data); ?>" selected> <?php echo h($show_data);?></option>
               <?php for($i=5; $i<21; $i++):?>
                 <?php if($i==$data['show_data']):?>
-                  <option value= "<?php echo $i; ?>" selected> <?php echo $i;?></option>
+                  <option value= "<?php echo h($i); ?>" selected> <?php echo h($i);?></option>
                 <?php else:?>
-                <option value= "<?php echo $i; ?>"> <?php echo $i;?></option>
+                <option value= "<?php echo h($i); ?>"> <?php echo h($i);?></option>
                 <?php endif;?>
               <?php endfor; ?>
             </select>

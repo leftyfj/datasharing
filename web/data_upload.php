@@ -91,7 +91,7 @@ if(empty($err)) {
     // SQL文
     // データベースにセット
     // $sql = "INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by, updated_at, updated_by) VALUES (:ref, :title, :year, :genre, :duration, :director, :writer, :procution, :actors, :description, now())";
-    echo($row);
+
     $sql ="INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by, updated_at, updated_by) VALUES (:ref, :title, :year, :genre, :duration, :director, :writer, :production, :actors, :description, now(), :created_by, now(), :updated_by)";
     $stmt = $pdo->prepare($sql);
 
@@ -146,7 +146,7 @@ if(empty($err)) {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:400,700|Open+Sans:400,700&display=swap" rel="stylesheet">
 <!-- Icon  Place your kit's code here -->
  <script src="https://kit.fontawesome.com/d7931251a6.js" crossorigin="anonymous"></script>
-  <title><?php echo SITE_TITEL; ?> | <?php echo $recNo; ?></title>
+  <title><?php echo h(SITE_TITEL); ?> | <?php echo h($recNo); ?></title>
 </head>
 <body  style="padding-top:70px;">
     <header>
@@ -177,7 +177,7 @@ if(empty($err)) {
       <h2><caption><i class="fas fa-edit" style="color:orange;"></i>&nbsp;データ一括登録</caption></h2>
       <p><strong>データをCSV形式で保存してアップロードしてください。</strong></p>
             <?php if($error_message['upload_file'] !=''):?>
-              <span class="help-block text-danger"><strong><?php echo $error_message['upload_file']; ?></strong></span>
+              <span class="help-block text-danger"><strong><?php echo h($error_message['upload_file']); ?></strong></span>
             <?php else: ?>
               <span class="help-block text-danger">&nbsp;</span>
             <?php endif; ?>
@@ -197,7 +197,7 @@ if(empty($err)) {
             </form>
             
             <?php if($complete_message !==0):?>
-                <p><strong style="color:blue;"><?php echo $complete_message."件のデータを登録しました。";?></strong></p>
+                <p><strong style="color:blue;"><?php echo h($complete_message."件のデータを登録しました。");?></strong></p>
             <?php endif;?>
     </div> <!--end container-->
   </main>
