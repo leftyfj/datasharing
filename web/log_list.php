@@ -112,35 +112,33 @@ unset($pdo)
         </form>
       </table>
       <a href="admin.php" class="btn btn-secondary text-white">戻る</a>
-      <nav class="my-5">
-        <ul class="pagination justify-content-center">
-        <?php if($total_page >=2) :?>
-          <?php if($page ==1):?>
-            <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
-          <?php else: ?>
-            <li class="page-item"><a href="?page=<?php echo $page-1;?>" class="page-link">&laquo</a></li>
-          <?php endif;?>
-
-          <?php for($i=1; $i<=$total_page; $i++): ?>
-            <?php if($i==$page):?>
-              <li class="page-item active"><a href="#" class="page-link"><?php echo $i;?></a></li>
+      <?php if($total_page >=2): ?>
+        <nav class="my-5">
+          <ul class="pagination justify-content-center">
+            <?php if($page ==1):?>
+              <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
             <?php else: ?>
-              <li class="page-item"><a href="?page=<?php echo $i;?>" class="page-link"><?php echo $i;?></a></li>
+              <li class="page-item"><a href="?page=<?php echo $page-1;?>" class="page-link">&laquo</a></li>
             <?php endif;?>
-          <?php endfor;?>
-          <?php if($page ==$total_page):?>
-            <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
-          <?php else: ?> 
-            <li class="page-item"><a href="log_list.php?page=<?php echo $page+1;?>" class="page-link">&raquo</a></li>
-          <?php endif;?>
-        <?php endif;?>
-        </ul>
-      </nav>
+            <?php for($i=1; $i<=$total_page; $i++): ?>
+              <?php if($i==$page):?>
+                <li class="page-item active"><a href="#" class="page-link"><?php echo $i;?></a></li>
+              <?php else: ?>
+                <li class="page-item"><a href="?page=<?php echo $i;?>" class="page-link"><?php echo $i;?></a></li>
+              <?php endif;?>
+            <?php endfor;?>
+            <?php if($page ==$total_page):?>
+              <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
+            <?php else: ?> 
+              <li class="page-item"><a href="log_list.php?page=<?php echo $page+1;?>" class="page-link">&raquo</a></li>
+            <?php endif;?>
+          </ul>
+        </nav>
+      <?php endif; ?>
     </div> <!--end container-->
   </main>
   <footer>
   </footer>
-
 <!-- <script src="../js/jquery.min.js"></script>
 <script src="../js/bootstrap.bundle.js"></script> -->
   <!-- ここから下記３行が抜けていた汗 -->

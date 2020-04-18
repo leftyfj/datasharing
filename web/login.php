@@ -53,17 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
     $error_message = array();
 
-    //入力チェック
-    // if ($user_name == '') {
-    // // エラーメッセージを配列に保存
-	  //   $error_message['user_name'] = 'ユーザーネームを入力して下さい。';
-    // } else {
-    //     //ユーザーネームの登録有無チェック
-    //   if (!checkUserName($user_name, $pdo)) {
-    //     $error_message['user_name'] ="ユーザーネームが登録されていません。";
-    //   }
-    // }
-
     if ($user_password == '') {
     // エラーメッセージを配列に保存
 	    $error_message['user_password'] = 'パスワードを入力して下さい。';

@@ -17,20 +17,20 @@ $error_message ='';
 $flag='';
 setToken();
 
-if(empty($_SESSION['DATA']['title_ja'])) {
-  $error_message ="邦題の入力は必須です";
+$ref = $_SESSION['DATA']['ref'] == "" ? '':$_SESSION['DATA']['ref'];
+if(empty($_SESSION['DATA']['title'])) {
+  $error_message ="タイトルの入力は必須です";
 } else {
-  $title_ja = $_SESSION['DATA']['title_ja'];
+  $title = $_SESSION['DATA']['title'];
 }
-
-$rank = $_SESSION['DATA']['rank'] == "" ? '':$_SESSION['DATA']['rank'];
-
-$title_en = $_SESSION['DATA']['title_en'] == "" ? '': $_SESSION['DATA']['title_en'];
 $year = $_SESSION['DATA']['year'] == "" ? '':$_SESSION['DATA']['year'];
+$genre = $_SESSION['DATA']['genre'] == "" ? '': $_SESSION['DATA']['genre'];
+$duration = $_SESSION['DATA']['duration'] == "" ? '': $_SESSION['DATA']['duration'];
 $director = $_SESSION['DATA']['director'] == "" ? '': $_SESSION['DATA']['director'];
-$producer = $_SESSION['DATA']['producer'] == "" ? '': $_SESSION['DATA']['producer'];
-$starring = $_SESSION['DATA']['starring'] == "" ? '': $_SESSION['DATA']['starring'] ;
-$prize = $_SESSION['DATA']['prize'] == "" ? '': $_SESSION['DATA']['prize'];
+$writer = $_SESSION['DATA']['writer'] == "" ? '': $_SESSION['DATA']['writer'];
+$production = $_SESSION['DATA']['production'] == "" ? '': $_SESSION['DATA']['production'];
+$actors = $_SESSION['DATA']['actors'] == "" ? '': $_SESSION['DATA']['actors'];
+$description = $_SESSION['DATA']['description'] == "" ? '': $_SESSION['DATA']['description'] ;
 
 if(!empty($_POST)) {
   //新規登録か修正か判断する
@@ -39,54 +39,67 @@ if(!empty($_POST)) {
   if(is_null($_SESSION['DATA']['amend_key'])) {
 
     //新規登録
-    $sql = "INSERT INTO data (rank, title_ja, title_en, year, director, producer, starring, prize, created_at, created_by, updated_at, updated_by) VALUES(:rank, :title_ja, :title_en, :year, :director, :producer, :starring, :prize, now(), :created_by, now(), :updated_by)";
+    $sql = "INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by, updated_at, updated_by) VALUES(:ref, :title, :year, :genre, :duration, :director, :writer, :production, :actors, :description, now(), :created_by, now(), :updated_by)";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':rank',$rank);
-    $stmt->bindValue(':title_ja',$title_ja);
-    $stmt->bindValue(':title_en',$title_en);
+
+    $stmt->bindValue(':ref',$ref);
+    $stmt->bindValue(':title',$title);
     $stmt->bindValue(':year',$year);
+    $stmt->bindValue(':genre',$genre);
+    $stmt->bindValue(':duration',$duration);
     $stmt->bindValue(':director',$director);
-    $stmt->bindValue(':producer',$producer);
-    $stmt->bindValue(':starring',$starring);
-    $stmt->bindValue(':prize',$prize);
+    $stmt->bindValue(':writer',$writer);
+    $stmt->bindValue(':production',$production);
+    $stmt->bindValue(':actors',$actors);
+    $stmt->bindValue(':description',$description);
+
     $stmt->bindValue(':created_by',$user['id']);
     $stmt->bindValue(':updated_by',$user['id']);
   
     $flag = $stmt->execute();
 
-    //操作ログを登録する
-    $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
-    $stmt_log = $pdo->prepare($sql_log);
-    $stmt_log->bindValue(':user_id',$user['id']);
-    $stmt_log->bindValue(':action', $action_array['new_data']."【".$title_ja."】");
-    $stmt_log->execute();
+    if($flag) {
+       //操作ログを登録する
+      $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
+      $stmt_log = $pdo->prepare($sql_log);
+      $stmt_log->bindValue(':user_id',$user['id']);
+      $stmt_log->bindValue(':action', $action_array['new_data']."【".$title."】");
+      $stmt_log->execute();
+    }
+   
 
   } else {
     //修正
-  
-    $sql = "UPDATE data SET rank = :rank , title_ja = :title_ja, title_en = :title_en, year = :year, director =:director, producer =:producer, starring =:starring,prize =:prize, updated_at = now(), updated_by =:updated_by WHERE id =:id";
+
+    $sql = "UPDATE data SET ref = :ref, title =:title, genre = :genre, duration = :duration, year = :year, director = :director, 
+    writer = :writer, production = :production, actors = :actors, description = :description, updated_by = :updated_by WHERE id =:id";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':rank',$rank);
-    $stmt->bindValue(':title_ja',$title_ja);
-    $stmt->bindValue(':title_en',$title_en);
+    $stmt->bindValue(':ref',$ref);
+    $stmt->bindValue(':title',$title);
     $stmt->bindValue(':year',$year);
+    $stmt->bindValue(':genre',$genre);
+    $stmt->bindValue(':duration',$duration);
     $stmt->bindValue(':director',$director);
-    $stmt->bindValue(':producer',$producer);
-    $stmt->bindValue(':starring',$starring);
+    $stmt->bindValue(':writer',$writer);
+    $stmt->bindValue(':production',$production);
+    $stmt->bindValue(':actors',$actors);
+    $stmt->bindValue(':description',$description);
     $stmt->bindValue(':updated_by',$user['id']);
-    $stmt->bindValue(':prize',$prize);
     $stmt->bindValue(':id',$_SESSION['DATA']['amend']);
 
     $flag = $stmt->execute();
 
-    //操作ログを登録する
-    $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
-    $stmt_log = $pdo->prepare($sql_log);
-    $stmt_log->bindValue(':user_id',$user['id']);
-    $stmt_log->bindValue(':action', $action_array['amend_data']."【".$title_ja."】");
-    $stmt_log->execute();
+    if($flag) {
+      //操作ログを登録する
+      $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
+      $stmt_log = $pdo->prepare($sql_log);
+      $stmt_log->bindValue(':user_id',$user['id']);
+      $stmt_log->bindValue(':action', $action_array['amend_data']."【".$ref." | ".$title."】");
+      $stmt_log->execute();
+    }
+    
   }
 
     // if($flag){
@@ -145,26 +158,30 @@ $_SESSION['USER'] =$user;
       <form action="" method="post">
         <input type="hidden" name="action" value="submit" />
         <dl class="row">
-         <dd class="col-md-3 font-weight-bold">順位</dd>
-          <dd class="col-md-9 "><?php echo $rank;?></dd>
-          <dd class="col-md-3 font-weight-bold">邦題</dd>
+         <dd class="col-md-3 font-weight-bold">Ref.No.</dd>
+          <dd class="col-md-9 "><?php echo $ref;?></dd>
+          <dd class="col-md-3 font-weight-bold">タイトル</dd>
           <?php if($error_message):?>
             <dd class="col-md-9 text-danger font-weight-bold"><?php echo $error_message;?></dd>
           <?php else:?>
-            <dd class="col-md-9 "><?php echo $title_ja;?></dd>
+            <dd class="col-md-9 "><?php echo $title;?></dd>
           <?php endif;?>
-          <dd class="col-md-3 font-weight-bold">原題</dd>
-          <dd class="col-md-9 "><?php echo $title_en;?></dd>
           <dd class="col-md-3 font-weight-bold">公開年</dd>
           <dd class="col-md-9"><?php echo $year;?></dd>
+          <dd class="col-md-3 font-weight-bold">ジャンル</dd>
+          <dd class="col-md-9"><?php echo $genre;?></dd>
+          <dd class="col-md-3 font-weight-bold">公開期間</dd>
+          <dd class="col-md-9"><?php echo $duration;?></dd>
           <dd class="col-md-3 font-weight-bold">監督</dd>
           <dd class="col-md-9"><?php echo $director;?></dd>
-          <dd class="col-md-3 font-weight-bold">プロデューサー</dd>
-          <dd class="col-md-9"><?php echo $producer;?></dd>
+          <dd class="col-md-3 font-weight-bold">脚本</dd>
+          <dd class="col-md-9"><?php echo $writer;?></dd>
+          <dd class="col-md-3 font-weight-bold">制作</dd>
+          <dd class="col-md-9"><?php echo $production;?></dd>
           <dd class="col-md-3 font-weight-bold">出演</dd>
-          <dd class="col-md-9"><?php echo $starring;?></dd>
-          <dd class="col-md-3 font-weight-bold">受賞</dd>
-          <dd class="col-md-9"><?php echo $prize;?></dd>
+          <dd class="col-md-9"><?php echo $actors;?></dd>
+          <dd class="col-md-3 font-weight-bold">内容</dd>
+          <dd class="col-md-9"><?php echo $description;?></dd>
           <div class="mt-3">
             
             <?php if(!empty($error_message)):?>

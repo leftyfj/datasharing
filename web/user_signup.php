@@ -77,12 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 	// DB登録処理
         // 処理3
         // データベース（cm_userテーブル）に新規登録する。
-        $stmt = $pdo->prepare("INSERT INTO user (user_name, user_email, user_password, admin_check, created_at, updated_at)
-        VALUES (:user_name, :user_email, :user_password, :admin_check, now(), now())");
+        $stmt = $pdo->prepare("INSERT INTO user (user_name, user_email, user_password, show_data, admin_check, created_at, updated_at)
+        VALUES (:user_name, :user_email, :user_password, :show_data, :admin_check, now(), now())");
 
         $stmt->bindValue(':user_name', $user_name);
         $stmt->bindValue(':user_email', $user_email);
         $stmt->bindValue(':user_password', password_hash($user_password, PASSWORD_DEFAULT));
+        $stmt->bindValue(':show_data', 5);
         $stmt->bindValue(':admin_check', intval($admin_check));
         $flag = $stmt->execute();
 

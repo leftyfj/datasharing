@@ -43,14 +43,15 @@ if(strpos($former_url, SITE_URL.'index.php') == 0) {
 }
 
 if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
-  $movie['rank'] = $_SESSION['DATA']['rank'];
-  $movie['title_ja'] = $_SESSION['DATA']['title_ja'];
-  $movie['title_en' ]= $_SESSION['DATA']['title_en'];
+  $movie['ref'] = $_SESSION['DATA']['ref'];
+  $movie['title'] = $_SESSION['DATA']['title'];
   $movie['year' ]= $_SESSION['DATA']['year'];
+  $movie['duration' ]= $_SESSION['DATA']['duration'];
   $movie['director'] =$_SESSION['DATA']['director'];
-  $movie['producer'] =$_SESSION['DATA']['producer'];
-  $movie['starring'] =$_SESSION['DATA']['starring'] ;
-  $movie['prize'] = $_SESSION['DATA']['prize'];
+  $movie['writer' ]= $_SESSION['DATA']['writer'];
+  $movie['production'] =$_SESSION['DATA']['production'];
+  $movie['actors'] =$_SESSION['DATA']['actors'] ;
+  $movie['description'] = $_SESSION['DATA']['description'];
 }
 
 ?>
@@ -98,37 +99,45 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
       <h2><caption><i class="fas fa-edit" style="color:orange;"></i>&nbsp;データ登録・編集</caption></h2>
       <form action="" method="post">
         <div class="form-group mb-4">
-          <label for="rank">順位</label>
-          <input type="text" name="rank" value="<?php echo $movie['rank'];?>"class="form-control form-control">
+          <label for="rank">Ref.No.</label>
+          <input type="text" name="ref" value="<?php echo $movie['ref'];?>"class="form-control form-control">
           <input type="hidden" name="amend" value="<?php echo $movie['id'];?>">
         </div>
         <div class="form-group mb-4">
-          <label for="title_ja">作品名<span class="required">必須</span></label>
-          <input type="text" name="title_ja" value="<?php echo $movie['title_ja'];?>"class="form-control form-control">
-        </div>
-        <div class="form-group mb-4">
-          <label for="title_en">原題</label>
-          <input type="text" name="title_en" value="<?php echo $movie['title_en'];?>"class="form-control form-control">
+          <label for="title">タイトル<span class="required">必須</span></label>
+          <input type="text" name="title" value="<?php echo $movie['title'];?>"class="form-control form-control">
         </div>
         <div class="form-group mb-4">
           <label for="year">年</label>
           <input type="number" name="year" value="<?php echo $movie['year'];?>" class="form-control form-control">
+        </div>
+           <div class="form-group mb-4">
+          <label for="genre">ジャンル</label>
+          <input type="text" name="genre" value="<?php echo $movie['genre'];?>"class="form-control form-control">
+        </div>
+           <div class="form-group mb-4">
+          <label for="duration">公開期間</label>
+          <input type="text" name="duration" value="<?php echo $movie['duration'];?>"class="form-control form-control">
         </div>
         <div class="form-group mb-4">
           <label for="director">監督</label>
           <input type="text" name="director" value="<?php echo $movie['director'];?>" class="form-control form-control">
         </div>
         <div class="form-group mb-4">
-          <label for="producer">制作者</label>
-          <input type="text" name="producer" value="<?php echo $movie['producer'];?>" class="form-control form-control">
+          <label for="writer">脚本</label>
+          <input type="text" name="writer" value="<?php echo $movie['writer'];?>" class="form-control form-control">
+        </div>
+           <div class="form-group mb-4">
+          <label for="production">制作</label>
+          <input type="text" name="production" value="<?php echo $movie['production'];?>"class="form-control form-control">
         </div>
         <div class="form-group mb-4">
-          <label for="starring">出演</label>
-          <input type="text" name="starring" value="<?php echo $movie['starring'];?>" class="form-control form-control">
+          <label for="actors">出演</label>
+          <input type="text" name="actors" value="<?php echo $movie['actors'];?>" class="form-control form-control">
         </div>
         <div class="form-group mb-4">
-          <label for="prize_check"">受賞</label>
-          <input type="text" name="prize" value="<?php echo $movie['prize'];?>" class="form-control form-control">
+          <label for="description">内容</label>
+          <input type="text" name="description" value="<?php echo $movie['description'];?>" class="form-control form-control">
         </div>
         <div>
           <button type="submit" class="btn btn-info text-white mb-2">内容確認</button><br>

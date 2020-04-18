@@ -78,43 +78,58 @@ if(empty($err)) {
   for($j=$header;$j<$rows_count;$j++) {
     $row = $data_array[$j];
     // カラムの長さを確認
-    //var_dump(count($row));
-    if(count($row)==8) {
+
+    if(count($row)==10) {
       for($i=0; $i<count($row); $i++) {
         //文字数を調べる
-        if(strlen(mb_check_encoding($row[$i], 'SJIS','UTF-8')) > 200) {
-          $row[$i] = substr($row[$i], 0 , 200) ;//200文字を超えていた場合、最初の200字を取得する
+        if(strlen(mb_check_encoding($row[$i], 'SJIS','UTF-8')) > 500) {
+          $row[$i] = substr($row[$i], 0 , 500) ;//500文字を超えていた場合、最初の200字を取得する
         }
       }
     }
+
     // SQL文
     // データベースにセット
-    $sql = "INSERT INTO data (rank, title_ja, title_en, year, director, producer, starring, prize, created_at, created_by, updated_at) VALUES (:rank, :title_ja, :title_en, :year, :director, :producer, :starring, :prize, now(), :created_by, now())";
+    // $sql = "INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by, updated_at, updated_by) VALUES (:ref, :title, :year, :genre, :duration, :director, :writer, :procution, :actors, :description, now())";
+    echo($row);
+    $sql ="INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by, updated_at, updated_by) VALUES (:ref, :title, :year, :genre, :duration, :director, :writer, :production, :actors, :description, now(), :created_by, now(), :updated_by)";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':rank', $row[0]);
-    $stmt->bindValue(':title_ja', $row[1]);
-    $stmt->bindValue(':title_en', $row[2]);
-    $stmt->bindValue(':year', $row[3]);
-    $stmt->bindValue(':director', $row[4]);
-    $stmt->bindValue(':producer', $row[5]);
-    $stmt->bindValue(':starring', $row[6]);
-    $stmt->bindValue(':prize', $row[7]);
+
+    $stmt->bindValue(':ref', $row[0]);
+    $stmt->bindValue(':title', $row[1]);
+    $stmt->bindValue(':year', $row[2]);
+    $stmt->bindValue(':genre', $row[3]);
+    $stmt->bindValue(':duration', $row[4]);
+    $stmt->bindValue(':director', $row[5]);
+    $stmt->bindValue(':writer', $row[6]);
+    $stmt->bindValue(':production', $row[7]);
+    $stmt->bindValue(':actors', $row[8]);
+    $stmt->bindValue(':description', $row[9]);
     $stmt->bindValue(':created_by', $user['id']);
-    $stmt->execute();
+    $stmt->bindValue(':updated_by', $user['id']);
+
+    $flag = $stmt->execute();
+    var_dump($flag);
     $data_counter ++;
+
     // ループ終了
   }
 
   //操作ログを登録する
+  if($flag) {
     $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
     $stmt_log = $pdo->prepare($sql_log);
     $stmt_log->bindValue(':user_id',$user['id']);
     $stmt_log->bindValue(':action', $action_array['upload_collectively']);
     $stmt_log->execute();
+
+    //完了メッセージを設定
+    $complete_message = $data_counter;
+  }
+
   //データベースから切断する
   unset($pdo);
-  //完了メッセージを設定
-   $complete_message = $data_counter;
+  
 }
 ?>
 <!DOCTYPE html>

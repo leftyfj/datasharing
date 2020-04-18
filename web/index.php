@@ -34,7 +34,6 @@ if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
 
 //ページ開始は何件目のデータか算出
 //開始番号=１ページの件数 * (ページ番号-1)
-//$offset = PAGE_COUNT * ($page -1);
 $offset = $page_count * ($page -1);
 //getされたキーワードを受け取る
 $search_query = $_GET['q'];
@@ -51,7 +50,7 @@ if($_GET['s'] !='') {
   $sortBy = $_GET['s']; //ソートのリクエストがあったときのget
 } else {
   //$sortBy = 'id';
-  $sortBy = 'rank';
+  $sortBy = 'ref';
 }
 
   //データベースに接続
@@ -63,42 +62,49 @@ if($_GET['s'] !='') {
   // ホワイトリストの準備（カラム）
 
    $sort_whitelist = [
-     'rank'     => ['rank','順位'],
-     'title_ja' =>['title_ja', '邦題'],
-     'title_en' => ['title_en','原題'],
-     'year'     => ['year','公開年'],
+     'ref' => ['ref','Ref.No.'],
+     'title' =>['title', 'タイトル'],
+     'year' => ['year','公開年'],
+     'genre' => ['genre','ジャンル'],
+     'duration' => ['duration','公開期間'],
      'director' => ['director','監督'],
-     'producer' => ['producer','制作者'],
-     'starring' => ['starring','出演'],
-     'prize'    => ['prize','受賞']
+     'writer' => ['writer','脚本'],
+     'production' => ['production','制作'],
+     'actors' => ['actors','出演'],
+     'description' => ['description','内容']
    ];
 
   //$sort_safe = isset($sort_whitelist[$sortBy]) ? $sort_whitelist[$sortBy] : $sort_whitelist['id'];
-  $sort_safe = isset($sort_whitelist[$sortBy][0]) ? $sort_whitelist[$sortBy][0] : $sort_whitelist['rank'][0];
+  $sort_safe = isset($sort_whitelist[$sortBy][0]) ? $sort_whitelist[$sortBy][0] : $sort_whitelist['ref'][0];
 
   $order_whitelist = array('asc' => 'asc', 'desc' => 'desc');
 
   $order_safe = isset($order_whitelist[$orderBy]) ? $order_whitelist[$orderBy] : $order_whitelist['asc'];
 
-  $sql = "SELECT * FROM `data` 
-  WHERE `title_ja` LIKE :title_ja 
-  OR `title_en` LIKE :title_en 
-  OR `year` LIKE :year 
-  OR `director` LIKE :director 
-  OR `producer` LIKE :producer 
-  OR `starring` LIKE :starring 
-  OR `prize` LIKE :prize 
+  $sql = "SELECT * FROM `data` WHERE `ref` LIKE :ref
+  OR `title` LIKE :title
+  OR `year` LIKE :year
+  OR `genre` LIKE :genre 
+  OR `duration` LIKE :duration
+  OR `director` LIKE :director
+  OR `writer` LIKE :writer
+  OR `production` LIKE :production 
+  OR `actors` LIKE :actors
+  OR `description` LIKE :description
   ORDER BY  $sort_safe $order_safe LIMIT  :offset, :count";
 
   //該当データを取得する
   $stmt = $pdo->prepare($sql);
-  $stmt ->bindValue(':title_ja', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmt ->bindValue(':title_en', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':ref', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':title', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmt ->bindValue(':year', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':genre', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':duration', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmt ->bindValue(':director', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmt ->bindValue(':producer', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmt ->bindValue(':starring', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmt ->bindValue(':prize', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':writer', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':production', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':actors', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmt ->bindValue(':description', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
   $stmt ->bindValue(':count', $page_count, PDO::PARAM_INT);
   $stmt-> execute();
@@ -107,22 +113,26 @@ if($_GET['s'] !='') {
 
   //抽出されたデータは何件あるか調べる
   $sqlForCounts = "SELECT count(*) FROM `data` 
-  WHERE `title_ja` LIKE :title_ja 
-  OR `title_en` LIKE :title_en 
+  WHERE `title` LIKE :title
   OR `year` LIKE :year 
+  OR `genre` LIKE :genre 
+  OR `duration` LIKE :duration 
   OR `director` LIKE :director 
-  OR `producer` LIKE :producer 
-  OR `starring` LIKE :starring 
-  OR `prize` LIKE :prize"; 
+  OR `writer` LIKE :writer 
+  OR `production` LIKE :production 
+  OR `actors` LIKE :actors 
+  OR `description` LIKE :description"; 
 
   $stmtForCounts = $pdo->prepare($sqlForCounts);
-  $stmtForCounts ->bindValue(':title_ja', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmtForCounts ->bindValue(':title_en', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':title', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmtForCounts ->bindValue(':year', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':genre', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':duration', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmtForCounts ->bindValue(':director', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmtForCounts ->bindValue(':producer', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmtForCounts ->bindValue(':starring', '%'.$search_query.'%', PDO::PARAM_STR);
-  $stmtForCounts ->bindValue(':prize', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':writer', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':production', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':actors', '%'.$search_query.'%', PDO::PARAM_STR);
+  $stmtForCounts ->bindValue(':description', '%'.$search_query.'%', PDO::PARAM_STR);
   $stmtForCounts-> execute();
   $total = $stmtForCounts->fetchColumn();
   //該当データのページ数
@@ -220,17 +230,19 @@ if($_GET['s'] !='') {
                 <?php foreach ($data as $datum) :?>
                   <tr>
                     <!-- <td><?php //echo $datum['id']; ?></td> -->
-                    <td style="width:5%"><?php echo $datum['rank']; ?></td>
-                    <td style="width:16%"><?php echo $datum['title_ja']; ?></td>
-                    <td style="width:16%"><?php echo $datum['title_en']; ?></td>
+                    <td style="width:6%"><?php echo $datum['ref']; ?></td>
+                    <td style="width:9%"><?php echo $datum['title']; ?></td>
                     <td style="width:5%"><?php echo $datum['year']; ?></td>
-                    <td style="width:11%"><?php echo $datum['director']; ?></td>
-                    <td style="width:11%"><?php echo $datum['producer']; ?></td>
-                    <td style="width:14%"><?php echo $datum['starring']; ?></td>
-                    <td style="width:10%"><?php echo $datum['prize']; ?></td>
+                    <td style="width:5%"><?php echo $datum['genre']; ?></td>
+                    <td style="width:5%"><?php echo $datum['duration']; ?></td>
+                    <td style="width:10%"><?php echo $datum['director']; ?></td>
+                    <td style="width:10%"><?php echo $datum['writer']; ?></td>
+                    <td style="width:10%"><?php echo $datum['production']; ?></td>
+                    <td style="width:10%"><?php echo $datum['actors']; ?></td>
+                    <td style="width:20%"><?php echo $datum['description']; ?></td>
                    <!-- <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php //echo $datum['id'];?>"></td>  $_POST['movie']としてデータのid番号を送る -->
                     <!-- <td style="width:6%" class="text-center"><input type="radio" name="movie" value="<?php //echo $datum['id'];?>"></td> -->
-                    <td style="width:12%">
+                    <td style="width:10%">
                     <a href="data_edit.php?id=<?php echo h($datum['id']); ?>">[編集]</a>
     	              <a href="javascript:void(0);" onclick="var ok=confirm('削除しても宜しいですか?');
                     if (ok) location.href='data_delete.php?id=<?php echo h($datum['id']); ?>'; return false;">[削除]</a>
@@ -254,14 +266,17 @@ if($_GET['s'] !='') {
             </div>
           </div>
     </div> <!--end row--> 
-      <nav class="my-5">
+      
+    </div> <!--end container-->
+  </main>
+  <?php if($total_page >=2): ?>
+    <nav class="my-5">
         <ul class="pagination justify-content-center">
         <?php if($page ==1):?>
           <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
         <?php else: ?>
           <li class="page-item"><a href="?page=<?php echo $page-1;?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
         <?php endif;?>
-
         <?php for($i=1; $i<=$total_page; $i++): ?>
           <?php if($i==$page):?>
             <li class="page-item active"><a href="#" class="page-link"><?php echo $i;?></a></li>
@@ -275,12 +290,11 @@ if($_GET['s'] !='') {
           <li class="page-item"><a href="item_list.php?page=<?php echo $page+1;?>&s=<?php echo $sortBy;?>&o=<?php echo $orderBy;?>&q=<?php echo h($search_query);?>" class="page-link">&raquo</a></li>
         <?php endif;?>
         </ul>
-      </nav>
-    </div> <!--end container-->
-  </main>
+    </nav>
+  <?php endif; ?>
   <footer>
   </footer>
-
+              
 <!-- <script src="../js/jquery.min.js"></script>
 <script src="../js/bootstrap.bundle.js"></script> -->
   <!-- ここから下記３行が抜けていた汗 -->
