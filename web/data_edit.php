@@ -33,28 +33,27 @@ if(strpos($former_url, SITE_URL.'index.php') == 0) {
   //データベースへの接続を解除する
   unset($pdo);
   
-  if(!empty($_POST)) {
-
-    $_SESSION['DATA'] =$_POST;
-    $_SESSION['DATA']['amend_key'] =$id_to_edit;
-    $_SESSION['USER'] = $user;
-    header('location: data_check.php');
-    exit;
-  }
-  
+  // if(!empty($_POST)) {
+  //   $_SESSION['DATA'] =$_POST;
+  //   $_SESSION['DATA']['amend_key'] =$id_to_edit;
+  //   $_SESSION['USER'] = $user;
+  //   header('location: data_check.php');
+  //   exit;
+  // }
+  $_SESSION['UPDATE'] = $id_to_edit;
 }
 
-if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
-  $movie['ref'] = $_SESSION['DATA']['ref'];
-  $movie['title'] = $_SESSION['DATA']['title'];
-  $movie['year' ]= $_SESSION['DATA']['year'];
-  $movie['duration' ]= $_SESSION['DATA']['duration'];
-  $movie['director'] =$_SESSION['DATA']['director'];
-  $movie['writer' ]= $_SESSION['DATA']['writer'];
-  $movie['production'] =$_SESSION['DATA']['production'];
-  $movie['actors'] =$_SESSION['DATA']['actors'] ;
-  $movie['description'] = $_SESSION['DATA']['description'];
-}
+// if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
+//   $movie['ref'] = $_SESSION['DATA']['ref'];
+//   $movie['title'] = $_SESSION['DATA']['title'];
+//   $movie['year' ]= $_SESSION['DATA']['year'];
+//   $movie['duration' ]= $_SESSION['DATA']['duration'];
+//   $movie['director'] =$_SESSION['DATA']['director'];
+//   $movie['writer' ]= $_SESSION['DATA']['writer'];
+//   $movie['production'] =$_SESSION['DATA']['production'];
+//   $movie['actors'] =$_SESSION['DATA']['actors'] ;
+//   $movie['description'] = $_SESSION['DATA']['description'];
+// }
 
 ?>
 <!DOCTYPE html>
@@ -99,9 +98,9 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
   <main>
     <div class="container pc-only bg-light p-4">
       <h2><caption><i class="fas fa-edit" style="color:orange;"></i>&nbsp;データ登録・編集</caption></h2>
-      <form action="" method="post">
+      <form action="data_check.php" method="post">
         <div class="form-group mb-4">
-          <label for="rank">Ref.No.</label>
+          <label for="ref">Ref.No.</label>
           <input type="text" name="ref" value="<?php echo h($movie['ref']);?>"class="form-control form-control">
           <input type="hidden" name="amend" value="<?php echo h($movie['id']);?>">
         </div>
@@ -143,6 +142,7 @@ if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
         </div>
         <div>
           <!-- <input type="hidden" name="token" value="<?php //echo h($_SESSION['sstoken']); ?>" /> -->
+          <input type="hidden" name="confirm" value="confirm">
           <button type="submit" class="btn btn-info text-white mb-2">内容確認</button><br>
           <input type="button" class="btn btn-secondary text-white" onclick="history.back()" value="戻る">
         </div>
