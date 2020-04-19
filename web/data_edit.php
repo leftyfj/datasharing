@@ -136,9 +136,14 @@ if(strpos($former_url, SITE_URL.'index.php') == 0) {
           <label for="actors">出演</label>
           <input type="text" name="actors" value="<?php echo h($movie['actors']);?>" class="form-control form-control">
         </div>
+        <!-- <div class="form-group mb-4">
+          <label for="description">内容</label>
+          <input type="text" name="description" value="<?php //echo h($movie['description']);?>" class="form-control form-control">
+        </div> -->
         <div class="form-group mb-4">
           <label for="description">内容</label>
-          <input type="text" name="description" value="<?php echo h($movie['description']);?>" class="form-control form-control">
+          <!-- <input type="textarea" name="description" value="<?php echo h($movie['description']);?>" class="form-control form-control"> -->
+          <textarea name="description" rows="3" class="form-control form-control"><?php echo h($movie['description']);?></textarea>
         </div>
         <div>
           <!-- <input type="hidden" name="token" value="<?php //echo h($_SESSION['sstoken']); ?>" /> -->

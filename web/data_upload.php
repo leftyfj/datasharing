@@ -109,7 +109,6 @@ if(empty($err)) {
     $stmt->bindValue(':updated_by', $user['id']);
 
     $flag = $stmt->execute();
-    var_dump($flag);
     $data_counter ++;
 
     // ループ終了

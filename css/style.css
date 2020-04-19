@@ -33,6 +33,11 @@ h3 {
   font-size: 18px;
 }
 
+#data-count {
+  font-size: 0.5em;
+  letter-spacing: 0.1em;
+}
+
 .show_version {
   font-size: 10px;
 }

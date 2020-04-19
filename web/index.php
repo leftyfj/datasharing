@@ -185,7 +185,7 @@ if($_GET['s'] !='') {
   <main>
     <div class="containera bg-light p-4">
       <div id="jq"></div>
-      <h2><caption><i class="fas fa-sign-in-alt" style="color:orange;"></i>&nbsp;データ一覧</caption></h2>
+      <h2><caption><i class="fas fa-sign-in-alt" style="color:orange;"></i>&nbsp;データ一覧</caption><span id="data-count">(総データ数 <?php echo $total;?>件)</span></h2>
           <div class="row justify-content-sm-between mb-3">
             <div class="col-sm-6">
               <form class="form-inline" action="" method="get">
