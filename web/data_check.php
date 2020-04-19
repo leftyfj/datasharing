@@ -11,18 +11,17 @@ if (!isset($_SESSION['USER'])) {
     exit;
 }
 
-//var_dump($_POST['confirm']);
 $recNo = getVersionNo();
 $id_to_edit = $_SESSION['UPDATE'];
 $user = $_SESSION['USER'];
 $error_message ='';
-echo '1 ';
+
 if ($_SERVER['REQUEST_METHOD']!="POST")  {
-echo '2 ';
+
 } else {
-  echo '3 ';
+
   if($_POST['confirm']=='confirm') {
-    echo '4 ';
+
     //前の画面からPOSTされた内容を表示する
     $ref = $_POST['ref'] == "" ? '':$_POST['ref'];
     if(empty($_POST['title'])) {
@@ -41,7 +40,6 @@ echo '2 ';
 
     $_POST['confirm']='';
   } else {
-    echo '5 ';
     $ref = $_POST['ref'];
     $title = $_POST['title'];
     $year = $_POST['year'];
@@ -52,22 +50,18 @@ echo '2 ';
     $production = $_POST['production'];
     $actors = $_POST['actors'];
     $description = $_POST['description'];
-    var_dump($_POST);
+
     //DBに登録、更新をする
     $pdo = connectDb();
     
     if(is_null($id_to_edit)) {
-    echo'新規登録';
-    echo '5-1 ';
-   //$sql = "INSERT INTO data (ref, title, created_by) VALUES(:ref, :title, now())";
-
-    $sql = "INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by) VALUES(:ref, :title, :year, :genre, :duration, :director, :writer, :production, :actors, :description, now(), :created_by)";
+      $sql = "INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by) VALUES(:ref, :title, :year, :genre, :duration, :director, :writer, :production, :actors, :description, now(), :created_by)";
       $pdo = connectDb();
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':ref',$ref);
       $stmt->bindValue(':title',$title);
-     $stmt->bindValue(':year',$year);
+      $stmt->bindValue(':year',$year);
       $stmt->bindValue(':genre',$genre);
       $stmt->bindValue(':duration',$duration);
       $stmt->bindValue(':director',$director);
@@ -80,11 +74,7 @@ echo '2 ';
 
       $new_or_edit = "new";
     } else {
-    echo'データ更新';
-    echo '5-2 ';
-    var_dump($id_to_edit);
     $sql = "UPDATE data SET ref = :ref, title =:title, genre = :genre, duration = :duration, year = :year, director = :director, writer = :writer, production = :production, actors = :actors, description = :description, updated_by = :updated_by WHERE id =:id";
-
     $pdo = connectDb();
 
     $stmt = $pdo->prepare($sql);
@@ -93,246 +83,41 @@ echo '2 ';
     $stmt->bindValue(':year',$year);
     $stmt->bindValue(':genre',$genre);
     $stmt->bindValue(':duration',$duration);
-      $stmt->bindValue(':director',$director);
-      $stmt->bindValue(':writer',$writer);
-      $stmt->bindValue(':production',$production);
-      $stmt->bindValue(':actors',$actors);
-      $stmt->bindValue(':description',$description);
-      $stmt->bindValue(':updated_by',$user['id']);
-      $stmt->bindValue(':id',$_SESSION['DATA']['amend']);
-      $stmt->bindValue(':id',$id_to_edit);
-      $flag = $stmt->execute();
+    $stmt->bindValue(':director',$director);
+    $stmt->bindValue(':writer',$writer);
+    $stmt->bindValue(':production',$production);
+    $stmt->bindValue(':actors',$actors);
+    $stmt->bindValue(':description',$description);
+    $stmt->bindValue(':updated_by',$user['id']);
+    //$stmt->bindValue(':id',$_SESSION['DATA']['amend']);
+    $stmt->bindValue(':id',$id_to_edit);
+    $flag = $stmt->execute();
 
     $new_or_edit = "edit";
     }
 
-    foreach($error_message as $err) {
-      if (!empty($err)) {
-        break;
-      }
-    }
-
-    if(empty($err)) {
-      echo '5-3 ';
-      // $pdo = connectDb();
-
-      // $stmt = $pdo->prepare($sql);
-      // $stmt->bindValue(':ref',$ref);
-      // $stmt->bindValue(':title',$title);
-      // $stmt->bindValue(':year',$year);
-      // $stmt->bindValue(':genre',$genre);
-      // $stmt->bindValue(':duration',$duration);
-      // $stmt->bindValue(':director',$director);
-      // $stmt->bindValue(':writer',$writer);
-      // $stmt->bindValue(':production',$production);
-      // $stmt->bindValue(':actors',$actors);
-      // $stmt->bindValue(':description',$description);
-      // $stmt->bindValue(':updated_by',$user['id']);
-      // $stmt->bindValue(':id',$_SESSION['DATA']['amend']);
-      // $stmt->bindValue(':id',$id_to_edit);
-      // $flag = $stmt->execute();
-       echo '5-3-3 ';
     if($flag) {
-      echo '5-4 ';
       if($new_or_edit == "new") {
-        //操作ログを登録する
-        echo '5-5 ';
         $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
         $stmt_log = $pdo->prepare($sql_log);
         $stmt_log->bindValue(':user_id',$user['id']);
         $stmt_log->bindValue(':action', $action_array['new_data']."【".$title."】");
       } else {
-        //操作ログを登録する
-        echo '5-6 ';
         $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
         $stmt_log = $pdo->prepare($sql_log);
         $stmt_log->bindValue(':user_id',$user['id']);
+        if($ref==''){
+          $ref='Ref.No.なし';
+        }
         $stmt_log->bindValue(':action', $action_array['amend_data']."【".$ref." | ".$title."】");
       }
-      echo '5-7 ';
       $stmt_log->execute();
     }
-
-  }
-
-
-
-  //   if(is_null($_SESSION['UPDATE'])) {
-  //      //データ新規登録
-  //      echo '新規';
-  //     $sql = "INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by, updated_at, updated_by) VALUES(:ref, :title, :year, :genre, :duration, :director, :writer, :production, :actors, :description, now(), :created_by, now(), :updated_by)";
-
-  //     $stmt = $pdo->prepare($sql);
-
-  //     $stmt->bindValue(':ref',$ref);
-  //     $stmt->bindValue(':title',$title);
-  //     $stmt->bindValue(':year',$year);
-  //     $stmt->bindValue(':genre',$genre);
-  //     $stmt->bindValue(':duration',$duration);
-  //     $stmt->bindValue(':director',$director);
-  //     $stmt->bindValue(':writer',$writer);
-  //     $stmt->bindValue(':production',$production);
-  //     $stmt->bindValue(':actors',$actors);
-  //     $stmt->bindValue(':description',$description);
-
-  //     $stmt->bindValue(':created_by',$user['id']);
-  //     $stmt->bindValue(':updated_by',$user['id']);
-
-  //     $flag = $stmt->execute();
-
-  //     if($flag) {
-  //       //操作ログを登録する
-  //       $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
-  //       $stmt_log = $pdo->prepare($sql_log);
-  //       $stmt_log->bindValue(':user_id',$user['id']);
-  //       $stmt_log->bindValue(':action', $action_array['new_data']."【".$title."】");
-  //       $stmt_log->execute();
-  //     }
-
-  //   } else {
-  //     //データ更新
-  //     echo '更新';
-  //     $sql = "UPDATE data SET ref = :ref, title =:title, genre = :genre, duration = :duration, year = :year, director = :director,
-  //   writer = :writer, production = :production, actors = :actors, description = :description, updated_by = :updated_by WHERE id =:id";
-
-  //     $stmt = $pdo->prepare($sql);
-  //     $stmt->bindValue(':ref',$ref);
-  //     $stmt->bindValue(':title',$title);
-  //     $stmt->bindValue(':year',$year);
-  //     $stmt->bindValue(':genre',$genre);
-  //     $stmt->bindValue(':duration',$duration);
-  //     $stmt->bindValue(':director',$director);
-  //     $stmt->bindValue(':writer',$writer);
-  //     $stmt->bindValue(':production',$production);
-  //     $stmt->bindValue(':actors',$actors);
-  //     $stmt->bindValue(':description',$description);
-  //     $stmt->bindValue(':updated_by',$user['id']);
-  //     $stmt->bindValue(':id',$_SESSION['DATA']['amend']);
-
-  //     $flag = $stmt->execute();
-  //   echo '8 ';
-  //     if($flag) {
-  //       //操作ログを登録する
-  //       $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
-  //       $stmt_log = $pdo->prepare($sql_log);
-  //       $stmt_log->bindValue(':user_id',$user['id']);
-  //       $stmt_log->bindValue(':action', $action_array['amend_data']."【".$ref." | ".$title."】");
-  //       $stmt_log->execute();
-  //       }
     //DBを切断
     unset($pdo);
-    echo '6 ';
   }
-echo '7 ';
 }
-  // }
 
-
-
-
-// $ref = $_SESSION['DATA']['ref'] == "" ? '':$_SESSION['DATA']['ref'];
-// if(empty($_SESSION['DATA']['title'])) {
-//   $error_message ="タイトルの入力は必須です";
-// } else {
-//   $title = $_SESSION['DATA']['title'];
-// }
-// $year = $_SESSION['DATA']['year'] == "" ? '':$_SESSION['DATA']['year'];
-// $genre = $_SESSION['DATA']['genre'] == "" ? '': $_SESSION['DATA']['genre'];
-// $duration = $_SESSION['DATA']['duration'] == "" ? '': $_SESSION['DATA']['duration'];
-// $director = $_SESSION['DATA']['director'] == "" ? '': $_SESSION['DATA']['director'];
-// $writer = $_SESSION['DATA']['writer'] == "" ? '': $_SESSION['DATA']['writer'];
-// $production = $_SESSION['DATA']['production'] == "" ? '': $_SESSION['DATA']['production'];
-// $actors = $_SESSION['DATA']['actors'] == "" ? '': $_SESSION['DATA']['actors'];
-// $description = $_SESSION['DATA']['description'] == "" ? '': $_SESSION['DATA']['description'] ;
-//echo '4 ';
- // CSRF対策↓
-	//setToken();
-// if(!empty($_POST)) {
-// echo '5 ';
-// // CSRF対策↓
-// echo h($_SESSION['sstoken']);
-//  //checkToken();
-//  // CSRF対策↓
-// 	//setToken();
-//   //新規登録か修正か判断する
-//   $pdo = connectDb();
-
-//   if(is_null($_SESSION['DATA']['amend_key'])) {
-
-//     //新規登録
-//     $sql = "INSERT INTO data (ref, title, year, genre, duration, director, writer, production, actors, description, created_at, created_by, updated_at, updated_by) VALUES(:ref, :title, :year, :genre, :duration, :director, :writer, :production, :actors, :description, now(), :created_by, now(), :updated_by)";
-
-//     $stmt = $pdo->prepare($sql);
-
-//     $stmt->bindValue(':ref',$ref);
-//     $stmt->bindValue(':title',$title);
-//     $stmt->bindValue(':year',$year);
-//     $stmt->bindValue(':genre',$genre);
-//     $stmt->bindValue(':duration',$duration);
-//     $stmt->bindValue(':director',$director);
-//     $stmt->bindValue(':writer',$writer);
-//     $stmt->bindValue(':production',$production);
-//     $stmt->bindValue(':actors',$actors);
-//     $stmt->bindValue(':description',$description);
-
-//     $stmt->bindValue(':created_by',$user['id']);
-//     $stmt->bindValue(':updated_by',$user['id']);
-  
-//     $flag = $stmt->execute();
-
-//     if($flag) {
-//        //操作ログを登録する
-//       $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
-//       $stmt_log = $pdo->prepare($sql_log);
-//       $stmt_log->bindValue(':user_id',$user['id']);
-//       $stmt_log->bindValue(':action', $action_array['new_data']."【".$title."】");
-//       $stmt_log->execute();
-//     }
-   
-// echo '6 ';
-//   } else {
-//     //修正
-//     // CSRF対策↓
-//     //checkToken();
-//    echo '7 '; 
-//     $sql = "UPDATE data SET ref = :ref, title =:title, genre = :genre, duration = :duration, year = :year, director = :director, 
-//     writer = :writer, production = :production, actors = :actors, description = :description, updated_by = :updated_by WHERE id =:id";
-
-//     $stmt = $pdo->prepare($sql);
-//     $stmt->bindValue(':ref',$ref);
-//     $stmt->bindValue(':title',$title);
-//     $stmt->bindValue(':year',$year);
-//     $stmt->bindValue(':genre',$genre);
-//     $stmt->bindValue(':duration',$duration);
-//     $stmt->bindValue(':director',$director);
-//     $stmt->bindValue(':writer',$writer);
-//     $stmt->bindValue(':production',$production);
-//     $stmt->bindValue(':actors',$actors);
-//     $stmt->bindValue(':description',$description);
-//     $stmt->bindValue(':updated_by',$user['id']);
-//     $stmt->bindValue(':id',$_SESSION['DATA']['amend']);
-
-//     $flag = $stmt->execute();
-// echo '8 ';
-//     if($flag) {
-//       //操作ログを登録する
-//       $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
-//       $stmt_log = $pdo->prepare($sql_log);
-//       $stmt_log->bindValue(':user_id',$user['id']);
-//       $stmt_log->bindValue(':action', $action_array['amend_data']."【".$ref." | ".$title."】");
-//       $stmt_log->execute();
-//     }
-//  echo '9 ';   
-//   }
-
-//     // if($flag){
-//     //   echo'登録しました';
-//     // }
-//   //DBを切断
-//   unset($pdo);
-
-// }
-// echo '10';
 $_SESSION['USER'] =$user;
 ?>
 <!DOCTYPE html>
