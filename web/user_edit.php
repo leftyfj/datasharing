@@ -60,7 +60,18 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
     //メールアドレスの形式チェック
     if(!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
       $error_message['user_email'] = '正しくメールアドレスを入力してください';;
-    } 
+    } else {
+      //データベースに接続する
+      $pdo = connectDb();
+      
+      //メールアドレスの重複有無チェック
+      if (checkEmailwithoutMyself($user_email, $pdo, $user_id_to_edit)) {
+         $error_message['user_email'] = '他のユーザーがこのメールアドレスを使用しています。他のメールアドレスで登録してください。';
+      }
+       unset($pdo);
+    }
+
+
   }
 //もし$err配列に何もエラーメッセージが保存されていなかったら
   //配列$error_messageの各要素がNULLかチェック
@@ -94,7 +105,7 @@ if($_SERVER['REQUEST_METHOD']!="POST"){
     session_regenerate_id(true);
     //UPDATE後のデータにセッションを更新する
     $_SESSION['USER'] = $user;
-    
+    // header('Location: ./');
     }
 }
 

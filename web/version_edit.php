@@ -6,6 +6,11 @@ ini_set('display_errors',0);
 error_reporting(0);
 session_start();
 
+if (!isset($_SESSION['USER'])) {
+    header('Location: '.SITE_URL.'login.php');
+    exit;
+}
+
 if ($_SESSION['USER']['admin_check'] =='0') {
     header('Location: '.SITE_URL.'index.php');
     exit;

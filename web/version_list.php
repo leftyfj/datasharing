@@ -30,8 +30,10 @@ if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
 
 //ページ開始は何件目のデータか算出
 //開始番号=１ページの件数 * (ページ番号-1)
-$offset = PAGE_COUNT * ($page -1);
-
+$page_count = getPageCount($user['id']);
+$offset = $page_count * ($page -1);
+$page_left = ceil($page / PAGE_NO_WIDTH) * PAGE_NO_WIDTH -(PAGE_NO_WIDTH -1);
+$page_right = $page_left + (PAGE_NO_WIDTH -1);
 //ページネーション終わり
 
 //データベースに接続
@@ -40,7 +42,7 @@ $pdo = connectDb();
 $sql = "SELECT * FROM `version` ORDER BY `id` ASC LIMIT :offset, :count";
 $stmt = $pdo->prepare($sql);
 $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt ->bindValue(':count', PAGE_COUNT, PDO::PARAM_INT);
+$stmt ->bindValue(':count', $page_count, PDO::PARAM_INT);
 $stmt-> execute();
 //取得したデータを配列に収める
 $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -49,7 +51,7 @@ $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
 $sqlForCounts = "SELECT count(*) FROM `version`"; 
 $stmtForCounts = $pdo->query($sqlForCounts);
 $total = $stmtForCounts->fetchColumn();
-$total_page = ceil($total / PAGE_COUNT);
+$total_page = ceil($total / $page_count);
 
 //データベース接続を切断する
 unset($pdo)
@@ -122,33 +124,36 @@ unset($pdo)
           </tbody>
         </form>
       </table>
-      <input type="button" class="btn btn-secondary text-white" onclick="history.back()" value="戻る">
-    
-      <nav class="my-5">
+      <!-- <input type="button" class="btn btn-secondary text-white" onclick="history.back()" value="戻る"> -->
+    <?php if($total_page >=2): ?>
+    <nav class="my-5">
         <ul class="pagination justify-content-center">
-        <?php if($total_page >=2) :?>
-          <?php if($page ==1):?>
-            <!-- <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li> -->
-          <?php else: ?>
-            <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
-          <?php endif;?>
+         <li class="page-item"><a href="?page=1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">最初のページへ</a></li>
 
-          <?php for($i=1; $i<=$total_page; $i++): ?>
+        <?php if($page >1):?>
+          <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
+        <?php else: ?>
+          <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
+        <?php endif;?>
+
+          <?php for($i=$page_left ; $i<= $page_right; $i++): ?>
             <?php if($i==$page):?>
               <li class="page-item active"><a href="#" class="page-link"><?php echo h($i);?></a></li>
-            <?php else: ?>
+            <?php elseif($i <= $total_page): ?> <!-- 最終ページに到達したらそれ以降はページ数を表示しない-->
               <li class="page-item"><a href="?page=<?php echo h($i);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo h($i);?></a></li>
             <?php endif;?>
           <?php endfor;?>
-          <?php if($page ==1):?>
-          <?php elseif($page ==$total_page):?>
-            <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
-          <?php else: ?> 
-            <li class="page-item"><a href="version_list.php" class="page-link">&raquo</a></li>
-          <?php endif;?>
+
+        <?php if($page < $total_page):?>
+          <li class="page-item"><a href="?page=<?php echo h($page)+1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">&raquo</a></li>
+        <?php else: ?> 
+          <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
+
         <?php endif;?>
+        <li class="page-item"><a href="?page=<?php echo h($total_page);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">最後のページへ</a></li>
         </ul>
-      </nav>
+    </nav>
+  <?php endif; ?>
     </div> <!--end container-->
   </main>
   <footer>

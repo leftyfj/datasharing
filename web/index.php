@@ -15,6 +15,7 @@ session_start();
 
 $user = $_SESSION['USER'];
 $recNo = getVersionNo();
+
 if (!isset($_SESSION['USER'])) {
     header('Location: '.SITE_URL.'login.php');
     exit;
@@ -22,7 +23,6 @@ if (!isset($_SESSION['USER'])) {
 
 
 //ページネーション
-$page_count = getPageCount($user['id']);
 // 正規表現でパラメーターが数値かどうかのチェックを行う
 if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
 	// 正規表現にマッチしたらパラメーターをそのまま受け取る
@@ -32,9 +32,14 @@ if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
 	$page = 1;
 }
 
+$page_count = getPageCount($user['id']);
 //ページ開始は何件目のデータか算出
 //開始番号=１ページの件数 * (ページ番号-1)
 $offset = $page_count * ($page -1);
+$page_left = ceil($page / PAGE_NO_WIDTH) * PAGE_NO_WIDTH -(PAGE_NO_WIDTH -1);
+$page_right = $page_left + (PAGE_NO_WIDTH -1);
+
+
 //getされたキーワードを受け取る
 $search_query = $_GET['q'];
 //$sortBy = 'name';
@@ -189,7 +194,7 @@ if($_GET['s'] !='') {
           <div class="row justify-content-sm-between mb-3">
             <div class="col-sm-6">
               <form class="form-inline" action="" method="get">
-                <input class="form-control" type="text" name="q" size="30" placeholder="キーワード入力してください">
+                <input class="form-control" type="text" name="q" size="30" value="<?php echo h($search_query); ?>" placeholder="キーワード入力してください">
                 <input class="btn btn-info ml-2" type="submit" value="検索">
               </form>
             </div> <!--end col-sm-8 -->
@@ -215,11 +220,11 @@ if($_GET['s'] !='') {
                 <?php foreach($sort_whitelist as $column): ?>
                   <?php if($column[0] == $sortBy):?>
                     <th>
-                      <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo h($arrow_icon);?>"></i></span></a>
+                      <a style="font-size:14px;" href="?s=<?php echo h($column[0]);?>&o=<?php echo h($order);?>&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo h($arrow_icon);?>"></i></span></a>
                     </th>
                   <?php else:?>
                     <th>
-                      <a style="font-size:16px;" href="?s=<?php echo h($column[0]);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo h($arrow_icon);?>"></i></span></a>
+                      <a style="font-size:14px;" href="?s=<?php echo h($column[0]);?>&o=asc&q=<?php echo h($search_query);?>"><?php echo h($column[1]);?><span><i class="<?php echo h($arrow_icon);?>"></i></span></a>
                     </th>
                   <?php endif;?>
                 <?php endforeach;?> 
@@ -230,17 +235,17 @@ if($_GET['s'] !='') {
                 <?php foreach ($data as $datum) :?>
                   <tr>
                     <!-- <td><?php //echo $datum['id']; ?></td> -->
-                    <td style="width:6%"><?php echo h($datum['ref']); ?></td>
-                    <td style="width:9%"><?php echo h($datum['title']); ?></td>
-                    <td style="width:5%"><?php echo h($datum['year']); ?></td>
-                    <td style="width:5%"><?php echo h($datum['genre']); ?></td>
-                    <td style="width:5%"><?php echo h($datum['duration']); ?></td>
-                    <td style="width:10%"><?php echo h($datum['director']); ?></td>
-                    <td style="width:10%"><?php echo h($datum['writer']); ?></td>
-                    <td style="width:10%"><?php echo h($datum['production']); ?></td>
-                    <td style="width:10%"><?php echo h($datum['actors']); ?></td>
-                    <td style="width:20%"><?php echo h($datum['description']); ?></td>
-                    <td style="width:10%">
+                    <td class="contents_list" style="width:6%"><?php echo h($datum['ref']); ?></td>
+                    <td class="contents_list" style="width:8%"><?php echo h($datum['title']); ?></td>
+                    <td class="contents_list" style="width:5%"><?php echo h($datum['year']); ?></td>
+                    <td class="contents_list" style="width:6%"><?php echo h($datum['genre']); ?></td>
+                    <td class="contents_list" style="width:7%"><?php echo h($datum['duration']); ?></td>
+                    <td class="contents_list" style="width:9%"><?php echo h($datum['director']); ?></td>
+                    <td class="contents_list" style="width:9%"><?php echo h($datum['writer']); ?></td>
+                    <td class="contents_list" style="width:10%"><?php echo h($datum['production']); ?></td>
+                    <td class="contents_list" style="width:12%"><?php echo h($datum['actors']); ?></td>
+                    <td class="contents_list" style="font-size:16px; width:18%"><?php echo h($datum['description']); ?></td>
+                    <td class="contents_list" style="width:10%">
                     <a href="data_edit.php?id=<?php echo h($datum['id']); ?>">[編集]</a>
     	              <a href="javascript:void(0);" onclick="var ok=confirm('削除しても宜しいですか?');
                     if (ok) location.href='data_delete.php?id=<?php echo h($datum['id']); ?>'; return false;">[削除]</a>
@@ -270,31 +275,36 @@ if($_GET['s'] !='') {
   <?php if($total_page >=2): ?>
     <nav class="my-5">
         <ul class="pagination justify-content-center">
-        <?php if($page ==1):?>
-          <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
+         <li class="page-item"><a href="?page=1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">最初のページへ</a></li>
+
+        <?php if($page >1):?>
+          <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
         <?php else: ?>
-          <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
+          <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
         <?php endif;?>
-        <?php for($i=1; $i<=$total_page; $i++): ?>
-          <?php if($i==$page):?>
-            <li class="page-item active"><a href="#" class="page-link"><?php echo h($i);?></a></li>
-          <?php else: ?>
-            <li class="page-item"><a href="?page=<?php echo h($i);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo h($i);?></a></li>
-          <?php endif;?>
-        <?php endfor;?>
-        <?php if($page ==$total_page):?>
-          <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
+
+          <?php for($i=$page_left ; $i<= $page_right; $i++): ?>
+            <?php if($i==$page):?>
+              <li class="page-item active"><a href="#" class="page-link"><?php echo h($i);?></a></li>
+            <?php elseif($i <= $total_page): ?> <!-- 最終ページに到達したらそれ以降はページ数を表示しない-->
+              <li class="page-item"><a href="?page=<?php echo h($i);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo h($i);?></a></li>
+            <?php endif;?>
+          <?php endfor;?>
+
+        <?php if($page < $total_page):?>
+          <li class="page-item"><a href="?page=<?php echo h($page)+1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">&raquo</a></li>
         <?php else: ?> 
-          <li class="page-item"><a href="item_list.php?page=<?php echo h($page)+1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">&raquo</a></li>
+          <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
+
         <?php endif;?>
+        <li class="page-item"><a href="?page=<?php echo h($total_page);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">最後のページへ</a></li>
         </ul>
     </nav>
   <?php endif; ?>
   <footer>
   </footer>
-              
-<!-- <script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.bundle.js"></script> -->
+
+
   <!-- ここから下記３行が抜けていた汗 -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD']!="POST")  {
         $title = $_POST['title'];
     }
     $year = $_POST['year'] == "" ? '':$_POST['year'];
+    //$year = intval($year);
     $genre = $_POST['genre'] == "" ? '': $_POST['genre'];
     $duration =$_POST['duration'] == "" ? '': $_POST['duration'];
     $director = $_POST['director'] == "" ? '': $_POST['director'];
@@ -61,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD']!="POST")  {
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':ref',$ref);
       $stmt->bindValue(':title',$title);
-      $stmt->bindValue(':year',$year);
+      $stmt->bindValue(':year',intval($year));
       $stmt->bindValue(':genre',$genre);
       $stmt->bindValue(':duration',$duration);
       $stmt->bindValue(':director',$director);
@@ -203,9 +204,9 @@ $_SESSION['USER'] =$user;
             <input type="hidden" name="description" value="<?php echo h($description);?>">
             <input type="hidden" name="token" value="<?php echo h($_SESSION['sstoken']); ?>" />
             <?php if(!empty($error_message)):?>
-              <input class="btn btn-primary text-white ml-3 disabled" type="submit" value="登録する" /><br>
+              <!-- <input class="btn btn-primary text-white ml-3 disabled" type="text" value="登録する" /><br> -->
             <?php else:?>
-              <input class="btn btn-primary text-white ml-3" type="submit" value="登録する" /><br>
+              <input class="btn btn-primary text-white ml-3" type="submit" value="登録" /><br>
             <?php endif; ?>
             <input type="button" class="btn btn-secondary text-white m-3" onclick="history.back()" value="戻る">
           </div>

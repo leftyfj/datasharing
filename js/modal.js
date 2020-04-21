@@ -1,7 +1,7 @@
 'use strict';
 
 {
-
+  //let siteUrl = 'http://castleglengarry.sakura.ne.jp/datasharing/web/'
   let siteUrl = 'http://localhost/dev/datasharing/web/';
   let nextUrl;
   let formerUrl = document.referrer;

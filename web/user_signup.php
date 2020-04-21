@@ -6,6 +6,10 @@ error_reporting(0);
 
 $user = $_SESSION['USER'];
 
+if (!isset($_SESSION['USER'])) {
+    header('Location: '.SITE_URL.'login.php');
+    exit;
+}
 if ($_SESSION['USER']['admin_check'] =='0') {
     header('Location: '.SITE_URL.'index.php');
     exit;
@@ -94,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
         $stmt_log->bindValue(':action', $action_array['new_user']);
         $stmt_log->execute();
         //自動ログイン
-        //$user = getUser($user_email, $user_password, $pdo);
+        $user = getUser($user_email, $user_password, $pdo);
         // ↓セッションハイジャック対策
         session_regenerate_id(true);
 

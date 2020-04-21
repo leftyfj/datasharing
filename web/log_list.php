@@ -8,6 +8,11 @@ session_start();
 
 $user = $_SESSION['USER'];
 
+if (!isset($_SESSION['USER'])) {
+    header('Location: '.SITE_URL.'login.php');
+    exit;
+}
+
 if ($_SESSION['USER']['admin_check'] =='0') {
     header('Location: '.SITE_URL.'index.php');
     exit;
@@ -29,8 +34,12 @@ if (preg_match('/^[1-9][0-9]*$/', $_GET['page'])) {
 
 //ページ開始は何件目のデータか算出
 //開始番号=１ページの件数 * (ページ番号-1)
-$offset = PAGE_COUNT * ($page -1);
-
+$page_count = getPageCount($user['id']);
+//ページ開始は何件目のデータか算出
+//開始番号=１ページの件数 * (ページ番号-1)
+$offset = $page_count * ($page -1);
+$page_left = ceil($page / PAGE_NO_WIDTH) * PAGE_NO_WIDTH -(PAGE_NO_WIDTH -1);
+$page_right = $page_left + (PAGE_NO_WIDTH -1);
 //ページネーション終わり
 //ソートに関するリクエストを受領
 if($_GET['o'] !='') {
@@ -56,18 +65,19 @@ $sort_whitelist = [
      'updated_at' =>['updated_at', '日時']
    ];
 
-$sort_safe = isset($sort_whitelist[$sortBy]) ? $sort_whitelist[$sortBy] : $sort_whitelist['id'];
-
+//$sort_safe = isset($sort_whitelist[$sortBy]) ? $sort_whitelist[$sortBy] : $sort_whitelist['id'];
+$sort_safe = isset($sort_whitelist[$sortBy][0]) ? $sort_whitelist[$sortBy][0] : $sort_whitelist['id'][0];
 $order_whitelist = [
   'asc' => 'ASC',
   'desc' => 'DESC'
 ];
 
 $order_safe = isset($order_whitelist[$orderBy]) ? $order_whitelist[$orderBy] : $order_whitelist['asc'];
-$sql = "SELECT * FROM `history` ORDER BY $sort_safe[0] $order_safe LIMIT :offset, :count";
+$sql = "SELECT * FROM `history` ORDER BY $sort_safe $order_safe LIMIT :offset, :count";
+
 $stmt = $pdo->prepare($sql);
 $stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt ->bindValue(':count', PAGE_COUNT, PDO::PARAM_INT);
+$stmt ->bindValue(':count', $page_count, PDO::PARAM_INT);
 $stmt-> execute();
 //取得したデータを配列に収める
 $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -76,7 +86,7 @@ $data = $stmt->fetchALL(PDO::FETCH_ASSOC);
 $sqlForCounts = "SELECT count(*) FROM `history`"; 
 $stmtForCounts = $pdo->query($sqlForCounts);
 $total = $stmtForCounts->fetchColumn();
-$total_page = ceil($total / PAGE_COUNT);
+$total_page = ceil($total / $page_count);
 
 //データベース接続を切断する
 unset($pdo)
@@ -155,28 +165,34 @@ unset($pdo)
       </table>
       <a href="admin.php" class="btn btn-secondary text-white">戻る</a>
       <?php if($total_page >=2): ?>
-        <nav class="my-5">
-          <ul class="pagination justify-content-center">
-            <?php if($page ==1):?>
-              <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
-            <?php else: ?>
-              <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&s=<?php echo h($sortBy);?>&o=<?php echo $h(orderBy);?>" class="page-link">&laquo</a></li>
+    <nav class="my-5">
+        <ul class="pagination justify-content-center">
+         <li class="page-item"><a href="?page=1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">最初のページへ</a></li>
+
+        <?php if($page >1):?>
+          <li class="page-item"><a href="?page=<?php echo h($page)-1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">&laquo</a></li>
+        <?php else: ?>
+          <li class="page-item disabled"><a href="#" class="page-link">&laquo</a></li>
+        <?php endif;?>
+
+          <?php for($i=$page_left ; $i<= $page_right; $i++): ?>
+            <?php if($i==$page):?>
+              <li class="page-item active"><a href="#" class="page-link"><?php echo h($i);?></a></li>
+            <?php elseif($i <= $total_page): ?> <!-- 最終ページに到達したらそれ以降はページ数を表示しない-->
+              <li class="page-item"><a href="?page=<?php echo h($i);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link"><?php echo h($i);?></a></li>
             <?php endif;?>
-            <?php for($i=1; $i<=$total_page; $i++): ?>
-              <?php if($i==$page):?>
-                <li class="page-item active"><a href="#" class="page-link"><?php echo h($i);?></a></li>
-              <?php else: ?>
-                <li class="page-item"><a href="?page=<?php echo h($i);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>" class="page-link"><?php echo h($i);?></a></li>
-              <?php endif;?>
-            <?php endfor;?>
-            <?php if($page ==$total_page):?>
-              <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
-            <?php else: ?> 
-              <li class="page-item"><a href="log_list.php?page=<?php echo h($page)+1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>" class="page-link">&raquo</a></li>
-            <?php endif;?>
-          </ul>
-        </nav>
-      <?php endif; ?>
+          <?php endfor;?>
+
+        <?php if($page < $total_page):?>
+          <li class="page-item"><a href="?page=<?php echo h($page)+1;?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">&raquo</a></li>
+        <?php else: ?> 
+          <li class="page-item disabled"><a href="#" class="page-link">&raquo</a></li>
+
+        <?php endif;?>
+        <li class="page-item"><a href="?page=<?php echo h($total_page);?>&s=<?php echo h($sortBy);?>&o=<?php echo h($orderBy);?>&q=<?php echo h($search_query);?>" class="page-link">最後のページへ</a></li>
+        </ul>
+    </nav>
+  <?php endif; ?>
     </div> <!--end container-->
   </main>
   <footer>

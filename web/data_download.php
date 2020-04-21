@@ -36,16 +36,16 @@ $temp = tmpfile();
 // 取得したデータをループ
 foreach ($data as $key => $datum) {
   // 出力するデータの配列を作成
-  $datum['ref'] = mb_convert_encoding($datum['ref'], "SJIS", "UTF-8");
-  $datum['title'] = mb_convert_encoding($datum['title'], "SJIS", "UTF-8");
-  $datum['year'] = mb_convert_encoding($datum['year'], "SJIS", "UTF-8");
-  $datum['genre'] = mb_convert_encoding($datum['genre'], "SJIS", "UTF-8");
-  $datum['duration'] = mb_convert_encoding($datum['duration'], "SJIS", "UTF-8");
-  $datum['director'] = mb_convert_encoding($datum['director'], "SJIS", "UTF-8");
-  $datum['writer'] = mb_convert_encoding($datum['writer'], "SJIS", "UTF-8");
-  $datum['production'] = mb_convert_encoding($datum['production'], "SJIS", "UTF-8");
-  $datum['actors'] = mb_convert_encoding($datum['actors'], "SJIS", "UTF-8");
-  $datum['description'] = mb_convert_encoding($datum['description'], "SJIS", "UTF-8");
+  // $datum['ref'] = mb_convert_encoding($datum['ref'], "SJIS", "UTF-8");
+  // $datum['title'] = mb_convert_encoding($datum['title'], "SJIS", "UTF-8");
+  // $datum['year'] = mb_convert_encoding($datum['year'], "SJIS", "UTF-8");
+  // $datum['genre'] = mb_convert_encoding($datum['genre'], "SJIS", "UTF-8");
+  // $datum['duration'] = mb_convert_encoding($datum['duration'], "SJIS", "UTF-8");
+  // $datum['director'] = mb_convert_encoding($datum['director'], "SJIS", "UTF-8");
+  // $datum['writer'] = mb_convert_encoding($datum['writer'], "SJIS", "UTF-8");
+  // $datum['production'] = mb_convert_encoding($datum['production'], "SJIS", "UTF-8");
+  // $datum['actors'] = mb_convert_encoding($datum['actors'], "SJIS", "UTF-8");
+  // $datum['description'] = mb_convert_encoding($datum['description'], "SJIS", "UTF-8");
   
   $array = array(
     $datum['ref'], 

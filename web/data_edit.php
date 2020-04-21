@@ -32,28 +32,11 @@ if(strpos($former_url, SITE_URL.'index.php') == 0) {
 
   //データベースへの接続を解除する
   unset($pdo);
-  
-  // if(!empty($_POST)) {
-  //   $_SESSION['DATA'] =$_POST;
-  //   $_SESSION['DATA']['amend_key'] =$id_to_edit;
-  //   $_SESSION['USER'] = $user;
-  //   header('location: data_check.php');
-  //   exit;
-  // }
+
   $_SESSION['UPDATE'] = $id_to_edit;
 }
 
-// if($_REQUEST['action'] =='rewrite' && isset($_SESSION['DATA'])){
-//   $movie['ref'] = $_SESSION['DATA']['ref'];
-//   $movie['title'] = $_SESSION['DATA']['title'];
-//   $movie['year' ]= $_SESSION['DATA']['year'];
-//   $movie['duration' ]= $_SESSION['DATA']['duration'];
-//   $movie['director'] =$_SESSION['DATA']['director'];
-//   $movie['writer' ]= $_SESSION['DATA']['writer'];
-//   $movie['production'] =$_SESSION['DATA']['production'];
-//   $movie['actors'] =$_SESSION['DATA']['actors'] ;
-//   $movie['description'] = $_SESSION['DATA']['description'];
-// }
+
 
 ?>
 <!DOCTYPE html>
@@ -110,7 +93,7 @@ if(strpos($former_url, SITE_URL.'index.php') == 0) {
         </div>
         <div class="form-group mb-4">
           <label for="year">年</label>
-          <input type="number" name="year" value="<?php echo h($movie['year']);?>" class="form-control form-control">
+          <input type="text" name="year" value="<?php echo h($movie['year']);?>" class="form-control form-control">
         </div>
            <div class="form-group mb-4">
           <label for="genre">ジャンル</label>
