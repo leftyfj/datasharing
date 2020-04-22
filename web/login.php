@@ -29,14 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
       $user_password =$_COOKIE['PASSWORD'];
     }
 
-    // ログインされた状態ならindex.phpへされていない場合はlogin.phpへ
-    // 遷移させる。
-    // if($user) {
-    //   $clickLogo = "./index.php";
-    // } else {
-    //   $clickLogo = "./login.php";
-    // }
-
 } else {
     //POSTリクエスト
     // CSRF対策↓
@@ -64,6 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             $error_message['user_password'] ="パスワードが正しくありません。";
         }
     }
+
+    //セッションIDとLogin時刻をuserテーブルに保管する
+    $sql = "UPDATE `user` SET session_id = :session_id, login_at = now(), updated_at = now() WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':session_id', session_id());
+    $stmt->bindValue(':id', $user['id']);
+    $stmt->execute();
 
     // 自動ログイン情報を一度クリアする。
     if(isset($_COOKIE['CONTENTS'])) {
@@ -107,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
         }
 
-        
 
         //操作ログを登録する
         $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";

@@ -2,9 +2,8 @@
 //関数読み込み
 require_once('config.php');
 require_once('functions.php');
-ini_set("display_startup_errors", 0);
-error_reporting(E_ALL);
-
+ini_set('display_errors',0);
+error_reporting(0);
 session_start();
 
 $user = $_SESSION['USER'];

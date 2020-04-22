@@ -1,171 +1,131 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
-<!-- Active URL: https://ondras.zarovi.cz/sql/demo/?keyword=default -->
-<sql>
-<datatypes db="mysql">
-        <group label="Numeric" color="rgb(238,238,170)">
-            <type label="Integer" length="0" sql="INTEGER" re="INT" quote=""/>
-            <type label="Decimal" length="1" sql="DECIMAL" re="DEC" quote=""/>
-            <type label="Single precision" length="0" sql="FLOAT" quote=""/>
-            <type label="Double precision" length="0" sql="DOUBLE" re="DOUBLE" quote=""/>
-        </group>
-        
-        <group label="Character" color="rgb(255,200,200)">
-            <type label="Char" length="1" sql="CHAR" quote="'"/>
-            <type label="Varchar" length="1" sql="VARCHAR" quote="'"/>
-            <type label="Text" length="0" sql="MEDIUMTEXT" re="TEXT" quote="'"/>
-            <type label="Binary" length="1" sql="BINARY" quote="'"/>
-            <type label="Varbinary" length="1" sql="VARBINARY" quote="'"/>
-            <type label="BLOB" length="0" sql="BLOB" re="BLOB" quote="'"/>
-        </group>
-        
-        <group label="Date &amp; Time" color="rgb(200,255,200)">
-            <type label="Date" length="0" sql="DATE" quote="'"/>
-            <type label="Time" length="0" sql="TIME" quote="'"/>
-            <type label="Datetime" length="0" sql="DATETIME" quote="'"/>
-            <type label="Year" length="0" sql="YEAR" quote=""/>
-            <type label="Timestamp" length="0" sql="TIMESTAMP" quote="'"/>
-        </group>
-        
-        <group label="Miscellaneous" color="rgb(200,200,255)">
-            <type label="ENUM" length="1" sql="ENUM" quote=""/>
-            <type label="SET" length="1" sql="SET" quote=""/>
-            <type label="Bit" length="0" sql="bit" quote=""/>
-        </group>
-    </datatypes><table x="270" y="119" name="user">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER(10)</datatype>
-</row>
-<row name="user_name" null="1" autoincrement="0">
-<datatype>VARCHAR(30)</datatype>
-<default>NULL</default></row>
-<row name="user_email" null="1" autoincrement="0">
-<datatype>VARCHAR(200)</datatype>
-<default>NULL</default></row>
-<row name="user_password" null="1" autoincrement="0">
-<datatype>VARCHAR(60)</datatype>
-<default>NULL</default></row>
-<row name="admin_check" null="1" autoincrement="0">
-<datatype>INTEGER(2)</datatype>
-<default>NULL</default></row>
-<row name="created_at" null="0" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>''0000-00-00 00:00:00''</default></row>
-<row name="updated_at" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>''0000-00-00 00:00:00''</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="617" y="117" name="auto_login">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER(10)</datatype>
-<default>NULL</default></row>
-<row name="user_id" null="0" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
-</row>
-<row name="c_key" null="0" autoincrement="0">
-<datatype>VARCHAR(40)</datatype>
-</row>
-<row name="expire" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="created_at" null="0" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>''0000-00-00 00:00:00''</default></row>
-<row name="updated_at" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>''0000-00-00 00:00:00''</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="430" y="122" name="data">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER</datatype>
-</row>
-<row name="Ref.No." null="1" autoincrement="0">
-<datatype>VARCHAR(20)</datatype>
-<default>NULL</default></row>
-<row name="title" null="1" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>NULL</default></row>
-<row name="year" null="1" autoincrement="0">
-<datatype>INTEGER(4)</datatype>
-<default>NULL</default></row>
-<row name="genre" null="1" autoincrement="0">
-<datatype>VARCHAR(50)</datatype>
-<default>NULL</default></row>
-<row name="duration" null="1" autoincrement="0">
-<datatype>INTEGER(5)</datatype>
-<default>NULL</default></row>
-<row name="director" null="1" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>NULL</default></row>
-<row name="writer" null="1" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>NULL</default></row>
-<row name="production" null="1" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>NULL</default></row>
-<row name="actors" null="1" autoincrement="0">
-<datatype>VARCHAR(300)</datatype>
-<default>NULL</default></row>
-<row name="description" null="1" autoincrement="0">
-<datatype>VARCHAR(800)</datatype>
-<default>NULL</default></row>
-<row name="created_at" null="0" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>''0000-00-00 00:00:00''</default></row>
-<row name="created_by" null="1" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>NULL</default></row>
-<row name="updated_at" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>''0000-00-00 00:00:00''</default></row>
-<row name="updated_by" null="1" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="846" y="131" name="version">
-<row name="id" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="changes" null="1" autoincrement="0">
-<datatype>VARCHAR(200)</datatype>
-<default>NULL</default></row>
-<row name="created_at" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="updated_at" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="1020" y="142" name="history">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER</datatype>
-</row>
-<row name="user_id" null="1" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
-<default>NULL</default></row>
-<row name="action" null="1" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>NULL</default></row>
-<row name="created_at" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="updated_at" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-</sql>
+-- ---
+-- Globals
+-- ---
+
+-- SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+-- SET FOREIGN_KEY_CHECKS=0;
+
+-- ---
+-- Table 'user'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `user`;
+		
+CREATE TABLE `user` (
+  `id` INTEGER(10) NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(30) NULL DEFAULT NULL,
+  `user_email` VARCHAR(200) NULL DEFAULT NULL,
+  `user_password` VARCHAR(60) NULL DEFAULT NULL,
+  `show_data` INTEGER(4) NULL DEFAULT NULL,
+  `admin_check` INTEGER(2) NULL DEFAULT NULL,
+  `session_id` VARCHAR(50) NULL DEFAULT NULL,
+  `login_at` TIMESTAMP NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` TIMESTAMP NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Table 'auto_login'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `auto_login`;
+		
+CREATE TABLE `auto_login` (
+  `id` INTEGER(10) NOT NULL AUTO_INCREMENT DEFAULT NULL,
+  `user_id` INTEGER(10) NOT NULL,
+  `c_key` VARCHAR(40) NOT NULL,
+  `expire` TIMESTAMP NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT ''0000-00-00 00:00:00'',
+  `updated_at` TIMESTAMP NULL DEFAULT ''0000-00-00 00:00:00'',
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Table 'data'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `data`;
+		
+CREATE TABLE `data` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `Ref.No.` VARCHAR(20) NULL DEFAULT NULL,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `year` INTEGER(4) NULL DEFAULT NULL,
+  `genre` VARCHAR(50) NULL DEFAULT NULL,
+  `duration` INTEGER(5) NULL DEFAULT NULL,
+  `director` VARCHAR(100) NULL DEFAULT NULL,
+  `writer` VARCHAR(100) NULL DEFAULT NULL,
+  `production` VARCHAR(100) NULL DEFAULT NULL,
+  `actors` VARCHAR(300) NULL DEFAULT NULL,
+  `description` VARCHAR(800) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT ''0000-00-00 00:00:00'',
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT ''0000-00-00 00:00:00'',
+  `updated_by` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Table 'version'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `version`;
+		
+CREATE TABLE `version` (
+  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `changes` VARCHAR(200) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Table 'history'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `history`;
+		
+CREATE TABLE `history` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `user_id` INTEGER(10) NULL DEFAULT NULL,
+  `action` VARCHAR(100) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Foreign Keys 
+-- ---
+
+
+-- ---
+-- Table Properties
+-- ---
+
+-- ALTER TABLE `user` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `auto_login` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `data` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `version` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `history` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- ---
+-- Test Data
+-- ---
+
+-- INSERT INTO `user` (`id`,`user_name`,`user_email`,`user_password`,`show_data`,`admin_check`,`session_id`,`login_at`,`created_at`,`updated_at`) VALUES
+-- ('','','','','','','','','','');
+-- INSERT INTO `auto_login` (`id`,`user_id`,`c_key`,`expire`,`created_at`,`updated_at`) VALUES
+-- ('','','','','','');
+-- INSERT INTO `data` (`id`,`Ref.No.`,`title`,`year`,`genre`,`duration`,`director`,`writer`,`production`,`actors`,`description`,`created_at`,`created_by`,`updated_at`,`updated_by`) VALUES
+-- ('','','','','','','','','','','','','','','');
+-- INSERT INTO `version` (`id`,`changes`,`created_at`,`updated_at`) VALUES
+-- ('','','','');
+-- INSERT INTO `history` (`id`,`user_id`,`action`,`created_at`,`updated_at`) VALUES
+-- ('','','','','');

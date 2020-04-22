@@ -23,10 +23,18 @@ session_destroy();
 //ログイン情報のクッキーを破棄
 $random_key = $_COOKIE['CONTENTS'];
 $pdo = connectDb();
-
 $stmt = $pdo->prepare("DELETE FROM `auto_login` WHERE `c_key`= :c_key");
 $stmt->bindValue(':c_key', $random_key);
 $flag = $stmt->execute();
+
+//セッションIDとLogin時刻をリセットする
+
+$sql = "UPDATE `user` SET session_id = :session_id, login_at = :login_at, updated_at = now() WHERE id = :id";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(':session_id',NULL);
+$stmt->bindValue(':login_at',NULL);
+$stmt->bindValue(':id', $user_id);
+$stmt->execute();
 
 //操作ログを登録する
 $sql_log = "INSERT INTO history (user_id, action, created_at, updated_at) VALUES(:user_id, :action, now(), now())";
