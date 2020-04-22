@@ -2,8 +2,9 @@
 //関数読み込み
 require_once('config.php');
 require_once('functions.php');
-ini_set('display_errors',0);
-error_reporting(0);
+ini_set("display_startup_errors", 0);
+error_reporting(E_ALL);
+
 session_start();
 
 $user = $_SESSION['USER'];
@@ -30,17 +31,46 @@ if($_POST['header'] == 1) {
 //一括登録したデータ数のカウンター変数
 $data_counter = 0;
 
-if ($_POST['check_file'] == 1) {
-  if(!$_FILES['upload_file']['tmp_name']) {
-  $error_message['upload_file'] = "アップロードするCSVファイルを選択してください。";
-} else {
-    $file_extension = substr($_FILES['upload_file']['name'],-3);
-    if($file_extension !== 'csv') {
-        $error_message['upload_file'] = "CSV形式でアップロードしてください。";
-    }
-}
-}
+// if ($_POST['check_file'] == 1) {
+//   if(!$_FILES['upload_file']['tmp_name']) {
+//   $error_message['upload_file'] = "アップロードするCSVファイルを選択してください。";
+// } else {
+//     $file_extension = substr($_FILES['upload_file']['name'],-3);
+//     if($file_extension !== 'csv') {
+//         $error_message['upload_file'] = "CSV形式でアップロードしてください。";
+//     }
+// }
+// }
 
+if ($_POST['check_file'] == 1) {
+  if($_FILES['upload_file']['tmp_name']) {
+    $file_extension = substr($_FILES['upload_file']['name'],-3);
+
+    if($file_extension == 'csv') {
+      
+      if($_FILES['upload_file']['error'] == 2) {
+          $error_message['upload_file'] = "アップロードできませんでした。やり直してください。";
+        } //end error
+
+    } else {
+
+      $error_message['upload_file'] = "ファイルをCSV形式でアップロードしてください。";
+    } //end csv
+  } else {
+  
+      $error_message['upload_file'] = "ファイルを選択してください。";
+} //end check_file
+
+if($_FILES['upload_file']['size'] == 0 && $_FILES['upload_file']['error'] == 2) {
+
+        $error_message['upload_file'] = "ファイルサイズを1MB未満にしてください。";
+      } else {
+
+        if($_FILES['upload_file']['error'] == 2) {
+          $error_message['upload_file'] = "アップロードできませんでした。やり直してください。";
+        } //end error
+      } //end size
+} //end tmp_name
   //配列$error_messageの各要素がNULLかチェック
 foreach($error_message as $err) {
       if (!empty($err)) {
