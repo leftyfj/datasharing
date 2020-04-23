@@ -13,6 +13,9 @@ if (!isset($_SESSION['USER'])) {
 $recNo = getVersionNo();
 $user = $_SESSION['USER'];
 
+var_dump($user['id']);
+checkOperationWithinFivemin($user['id']);
+
 if ($user['admin_check'] == '0') {
   $flag = 'NO' ;
 } else {

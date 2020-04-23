@@ -190,4 +190,44 @@ function getPageCount($id) {
     unset($pdo);
     return $data['show_data'];
 }
+
+//ログイン後5分放置していたかチェックする
+function checkOperationWithinFivemin($id) {
+    $pdo = connectDb();
+    //$userのIDをキーに$userのレコードを検索する
+    $sql = "SELECT * FROM `user` WHERE id =:id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id',$id);
+    $stmt->execute();
+    $user = $stmt -> fetch();
+    //login_at を取得
+    $login_at = $user['login_at'];
+    $session_id = $user['session_id'];
+    date_default_timezone_set('Asia/Tokyo');
+    $interval = strtotime("now") - strtotime($login_at);
+    //現在時刻-login_at > 60* 5かどうか
+    if($interval > 300) {
+        // yes→ 
+        //データベース接続を切断する
+        unset($pdo);
+        // session_idとlogin_atをリセットする(NULL)
+        // logout.phpに遷移しログアウト　（*logout.phpのメッセージを修正する)
+        header('Location: '.SITE_URL.'logout.php');
+        exit;
+    } else {
+        // no →login_at を現在時刻に更新する
+        $sql = "UPDATE `user`  SET login_at = now() WHERE id =:id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':id',$id);
+        $stmt->execute();
+        $stmt -> fetch();
+        //データベース接続を切断する
+        unset($pdo);
+ 
+    }
+    
+    
+        
+
+}
 ?>
